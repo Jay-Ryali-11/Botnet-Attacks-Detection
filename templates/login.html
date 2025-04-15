@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Botnet Application Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+<style>
+    /* Custom scrollbar */
+     ::-webkit-scrollbar {
+        width: 5px; /* Width of the vertical scrollbar */
+     }
+
+     ::-webkit-scrollbar-track {
+        background-color: #121212; /* Dark background for the track */
+     }
+
+     ::-webkit-scrollbar-thumb {
+        background-color: #1e90ff; /* Blue color for the thumb (the part that moves) */
+     }
+
+     * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Rajdhani', sans-serif;
+        color: white;
+        background: black;
+        overflow: auto; /* Allow vertical scrolling */
+        min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main-content {
+        flex: 1;
+        padding-bottom: 100px; /* Add some bottom padding so content doesn't overlap the footer */
+    }
+
+    /* Video Background */
+    .video-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+    }
+
+    .video-bg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(8px) brightness(30%);
+    }
+
+    /* Header */
+    header {
+        width: 100%;
+        padding: 20px 50px;
+        position: absolute;
+        top: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    header div a {
+        color: white;
+        font-size: 26px;
+        text-decoration: none;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    nav ul {
+        list-style: none;
+        display: flex;
+    }
+
+    nav ul li {
+        margin-left: 25px;
+    }
+
+    nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        padding: 10px 15px;
+        transition: 0.3s ease-in-out;
+    }
+
+    nav ul li a:hover {
+        color: #1e90ff;
+        text-shadow: 0 0 15px #1e90ff, 0 0 25px #1e90ff;
+        font-weight: bold;
+    }
+
+    /* Login Form */
+    .form-container {
+        position: relative;
+        top: 100px;  /* Set the top margin to push the form below the header */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 800px;
+        background: rgba(0, 0, 0, 0.85);
+        padding: 70px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.1);
+        text-align: center;
+        backdrop-filter: blur(10px);
+        margin-bottom: 50px; /* Give space at the bottom */
+    }
+
+    .form-container h3 {
+        margin-bottom: 20px;
+        font-size: 26px;
+        font-weight: 600;
+    }
+
+    .form-container input {
+        width: 100%;
+        padding: 14px;
+        margin: 10px 0;
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    .form-container input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .form-container input:focus {
+        border-color: #1e90ff;
+        box-shadow: 0 0 10px #1e90ff;
+    }
+
+    .blue-underline {
+        border-bottom: 4px solid #1e90ff;
+        padding-bottom: 20px;
+        width: 50%;
+        margin: 0 auto;
+    }
+
+    /* Submit Button */
+    .form-container button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 10px;
+        background: linear-gradient(45deg, #1e90ff, #1478d4);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .form-container button:hover {
+        background: linear-gradient(45deg, #1478d4, #1e90ff);
+        box-shadow: 0 0 15px rgba(30, 144, 255, 0.8);
+    }
+
+    /* Custom Alert Box */
+    .custom-alert {
+        position: fixed;
+        top: 3%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        background: rgba(0, 0, 0, 0.9);
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+        color: white;
+        font-size: 18px;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        z-index: 9999;
+        text-align: center;
+    }
+
+    /* Alert Box Button */
+    .custom-alert button {
+        background: #1e90ff;
+        border: none;
+        color: white;
+        padding: 5px 5px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    .custom-alert button:hover {
+        background: #1478d4;
+    }
+
+    /* Forgot Password link */
+    .form-container form {
+        text-align: left;
+    }
+
+    .forgot-password {
+        color: #1e90ff;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+
+    /* Footer styling */
+    footer {
+        margin-top: auto; /* This ensures footer stays at the bottom */
+        padding: 20px;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        font-size: 16px;
+        width: 100%; /* Make footer span the full width */
+    }
+
+</style>
+</head>
+<body>
+    <!-- Header -->
+    {% block a %}
+    <header>
+        <div><a href="{{url_for('index')}}">BOTNET ATTACKS</a></div>
+        <nav>
+            <ul>
+                <li><a href="{{url_for('index')}}">HOME</a></li>
+                <li><a href="{{url_for('about')}}">ABOUT</a></li>
+                <li><a href="{{url_for('registration')}}">REGISTRATION</a></li>
+                <li><a href="{{ url_for('support') }}">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+    {% endblock %}
+
+    <!-- Full-Screen Video -->
+    <div class="video-container">
+        <video class="video-bg" autoplay loop muted>
+            <source src="{{ url_for('static', filename='videos/home_background.mp4') }}" type="video/mp4">
+        </video>
+    </div>
+
+    <br>
+    <!-- Login form -->
+    <div class="form-container">
+        <h3 class="blue-underline">Login</h3>
+        <form id="loginForm" action="{{url_for('login')}}" method="post">
+            <input type="email" name="email" id="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <p>Forgot Password?
+                <a href="#" onclick="checkEmailBeforeReset(event)" class="forgot-password">Reset here</a>
+            </p>
+            <button type="submit">Login</button>
+        </form>
+        <p style="color: white; margin-top: 20px;">Don't have an account? <a href="{{url_for('registration')}}" style="color: #1e90ff; text-decoration: none; font-weight: bold;">Create One</a></p>
+    </div><br><br><br><br><br><br><br><br>
+
+    <!-- Custom alert box -->
+    <div class="custom-alert" id="customAlert">
+        <span id="alertMessage">Your custom message goes here.</span>
+        <button onclick="closeAlert()">OK</button>
+    </div>
+
+    {% if msg %}
+    <div class="custom-alert" id="customAlert">
+        <span id="alertMessage">{{ msg }}</span>
+        <button onclick="closeAlert()">OK</button>
+    </div>
+    {% endif %}
+
+    <!-- Chatbot HTML -->
+    {% include 'chatbot.html' %}
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+    <script>
+        // Generic function to display the custom alert box
+        function showCustomAlert(message) {
+            let alertBox = document.getElementById("customAlert");
+            let alertMessage = document.getElementById("alertMessage");
+
+            alertMessage.textContent = message;  // Set the custom message
+            alertBox.style.display = "block";     // Show the alert box
+            alertBox.style.opacity = "1";         // Smooth fade-in
+
+            // Automatically close the alert after 3 seconds
+            setTimeout(() => {
+                closeAlert();  // Call the function to close the alert
+            }, 3000); // Automatically close the alert after 3 seconds (3000 milliseconds)
+        }
+
+        // Function to close the custom alert box
+        function closeAlert() {
+            let alertBox = document.getElementById("customAlert");
+            alertBox.style.opacity = "0"; // Smooth fade-out
+            setTimeout(() => {
+                alertBox.style.display = "none"; // Hide alert after fade-out
+            }, 500); // Time to wait before hiding the alert (to match the fade-out duration)
+        }
+
+        let isRedirecting = false; // This flag will track if the user is in the process of being redirected
+
+        function checkEmailBeforeReset(event) {
+            var email = document.getElementById('email').value;
+
+            // Prevent form submission if email is empty
+            if (!email) {
+                showCustomAlert('Please enter your email address first.');
+                event.preventDefault();  // Prevents form submission and redirect
+                return false;
+            }
+
+            // Show the redirection alert
+            showCustomAlert('You are being redirected to email verification to reset your password.');
+
+            // Make an AJAX request to check if the email exists
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{{ url_for("check_email") }}', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.status === 'success') {
+                        setTimeout(function() {
+                            window.location.href = "{{ url_for('reset') }}?email=" + encodeURIComponent(email);
+                        }, 2000);  // Delay before redirecting
+                    } else {
+                        showCustomAlert(response.message);
+                    }
+                } else {
+                    showCustomAlert('An error occurred while checking the email.');
+                }
+            };
+            xhr.send('email=' + encodeURIComponent(email));  // Send email to backend
+        }
+
+        {% if msg %}
+            showCustomAlert("{{ msg }}");  // Show the alert with the passed message
+        {% endif %}
+    </script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Botnet Application Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #121212;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #1e90ff;
+        }
+
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
+            background: black;
+            overflow-y: auto;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+        }
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 16px;
+        }
+
+        /* Video Background */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .video-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(8px) brightness(30%);
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            padding: 20px 50px;
+            position: absolute;
+            top: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        header div a {
+            color: white;
+            font-size: 26px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+        nav ul li {
+            margin-left: 25px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: 0.3s ease-in-out;
+        }
+        nav ul li a:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 15px #1e90ff, 0 0 25px #1e90ff;
+            font-weight: bold;
+        }
+
+        /* Registration Form */
+        .form-container {
+            width: 800px;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 70px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            margin: 0 auto;
+            margin-top: 100px;
+            margin-bottom: 50px;
+        }
+
+        .form-container h3 {
+            margin-bottom: 20px;
+            font-size: 26px;
+            font-weight: 600;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .form-container input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .form-container input:focus {
+            border-color: #1e90ff;
+            box-shadow: 0 0 10px #1e90ff;
+        }
+
+        .blue-underline {
+            border-bottom: 4px solid #1e90ff;
+            padding-bottom: 20px;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        /* Submit Button */
+        .form-container button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            background: linear-gradient(45deg, #1e90ff, #1478d4);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .form-container button:hover {
+            background: linear-gradient(45deg, #1478d4, #1e90ff);
+            box-shadow: 0 0 15px rgba(30, 144, 255, 0.8);
+        }
+
+        /* Smooth Alert Box */
+        .custom-alert {
+            position: fixed;
+            top: 3%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+            color: white;
+            font-size: 18px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 9999;
+            text-align: center;
+        }
+
+        /* Alert Box Button */
+        .custom-alert button {
+            background: #1e90ff;
+            border: none;
+            color: white;
+            padding: 5px 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .custom-alert button:hover {
+            background: #1478d4;
+        }
+    </style>
+</head>
+<body>
+
+      <!-- Chatbot HTML -->
+      {% include 'chatbot.html' %}
+
+      <!-- Header -->
+      <header>
+         <div><a href="{{url_for('index')}}">BOTNET ATTACKS</a></div>
+         <nav>
+            <ul>
+               <li><a href="{{url_for('index')}}">HOME</a></li>
+               <li><a href="{{url_for('about')}}">ABOUT</a></li>
+               <li><a href="{{ url_for('login') }}">Login</a></li>
+               <li><a href="{{ url_for('support') }}">Support</a></li>
+            </ul>
+         </nav>
+      </header>
+
+      <!-- Full-Screen Video -->
+      <div class="video-container">
+        <video class="video-bg" autoplay loop muted>
+            <source src="{{ url_for('static', filename='videos/home_background.mp4') }}" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Registration Form -->
+      <div class="form-container">
+          <h3 class="blue-underline">Registration</h3>
+          <form action="{{url_for('registration')}}" method="post">
+              <input type="text" name="name" placeholder="Name" required>
+              <input type="email" name="email" placeholder="Email" required>
+              <input type="password" name="password" placeholder="Password" required>
+              <input type="password" name="confirmpassword" placeholder="Confirm Password" required>
+              <input type="text" name="phonenumber" placeholder="Phone Number" required>
+              <input type="text" name="Address" placeholder="Address" required>
+              <button type="submit">Register</button>
+          </form>
+
+          <!-- Link to Login for Existing Users -->
+          <p style="color: white; margin-top: 20px;">Already have an account? <a href="{{url_for('login')}}" style="color: #1e90ff; text-decoration: none; font-weight: bold;">Login here</a></p>
+      </div>
+
+      {% if msg %}
+      <div class="custom-alert" id="customAlert">
+          <span>{{ msg }}</span>
+          <button onclick="closeAlert()">OK</button>
+      </div>
+      {% endif %}
+
+      <!-- Footer -->
+      {% include 'footer.html' %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let alertBox = document.getElementById("customAlert");
+            if (alertBox) {
+                alertBox.style.display = "block";
+                setTimeout(() => {
+                    alertBox.style.opacity = "1";
+                }, 10);
+            }
+        });
+
+        function closeAlert() {
+            let alertBox = document.getElementById("customAlert");
+            alertBox.style.opacity = "0";
+            setTimeout(() => {
+                alertBox.style.display = "none";
+            }, 500);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
+            overflow-x: hidden;
+            background-color: rgba(0, 0, 0, 0.96);
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            padding: 20px 50px;
+            position: fixed;
+            top: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        header div a {
+            color: white;
+            font-size: 26px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: 0.3s ease-in-out;
+        }
+
+        nav ul li a:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 15px #1e90ff, 0 0 25px #1e90ff;
+            font-weight: bold;
+        }
+
+        /* Main Profile Container */
+        .main-container {
+            padding-top: 120px; /* Add space to account for fixed header */
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
+        }
+
+        /* Profile Section (User Image & Basic Info) */
+        .profile-card {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 40px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.2); /* Soft glow shadow for profile card */
+            text-align: center;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .profile-card:hover {
+            box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.4); /* Increase glow when hovered */
+        }
+
+        .profile-card img {
+            width: 280px; /* Increased image size */
+            height: 280px; /* Increased image size */
+            border-radius: 0%;  /* No rounded corners for the image */
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .profile-card img:hover {
+            border-color: #1e90ff;
+        }
+
+        .profile-card .details {
+            margin-left: 50px; /* Increased space between image and details */
+            text-align: left;
+            width: 60%; /* Allow space for the image */
+            overflow: hidden;
+            word-wrap: break-word; /* Wrap text to avoid overflow */
+        }
+
+        .profile-card .details h4 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        /* Profile Details (User Info with Underline Effect) */
+        .line-container {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 40px;
+            box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.1);
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .line-container h3 {
+            margin-bottom: 20px;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        /* Heading with Black Background */
+        .heading {
+            font-size: 26px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px; /* Increased space below the heading */
+            text-align: center;
+            border-bottom: 4px solid #1e90ff; /* Blue underline */
+            padding: 25px 0;  /* Increased padding for more space around the text */
+            background-color: #000; /* Black background */
+            display: inline-block; /* Makes the background only cover the text */
+            width: 100%; /* Ensure the title stretches across the width */
+            border-radius: 10px;  /* Rounded corners for the heading */
+        }
+
+        .line {
+            display: flex;
+            margin: 15px 0;
+            align-items: center;
+        }
+
+        .line label {
+            font-size: 18px;
+            color: #888;
+            width: 150px; /* Label width */
+        }
+
+        .line input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            width: 400px; /* Increased width of input fields */
+            padding: 5px 0;
+            outline: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+            transition: 0.3s;
+            border-radius: 10px;  /* Rounded corners for input fields */
+        }
+
+        .line input:focus {
+            border-bottom-color: #1e90ff;
+            box-shadow: 0 0 5px #1e90ff;
+        }
+
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: #187bcd;
+        }
+
+        .success-message {
+            display: none;
+            color: #1e90ff;
+            font-size: 18px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Eye icon styles */
+        .eye-container {
+            display: flex;
+            align-items: center;
+            width: 400px; /* Same width as input fields */
+        }
+
+        .eye-icon {
+            cursor: pointer;
+            color: white;
+            font-size: 24px;
+            margin-left: 10px;
+        }
+
+        .eye-container input {
+            flex-grow: 1; /* Allow the input to grow and take available space */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div><a href="#">Hi {{ user[0] }}</a></div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('viewdata') }}">View Data</a></li>
+                <li><a href="{{ url_for('algo') }}">Algorithm</a></li>
+                <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
+                <li><a href="{{ url_for('prediction') }}">Prediction</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Profile Container -->
+    <div class="main-container">
+        <h3 class="heading">Registration Details</h3>
+
+        <!-- Profile Section (User Image & Basic Info) -->
+        <div class="profile-card">
+            <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Profile">
+            <div class="details">
+                <!-- Registration Form Fields -->
+                <form method="POST" action="{{ url_for('profile') }}">
+                    <div class="line">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" value="{{ user[0] }}" readonly>
+                    </div>
+                    <div class="line">
+                        <label for="email">Email Address:</label>
+                        <input type="email" id="email" name="email" value=" {{ user[1] }}" readonly>
+                    </div>
+                    <div class="line">
+                        <label for="password">Password:</label>
+                        <div class="eye-container">
+                            <input type="password" id="password" name="password" value="{{ user[2] }}" readonly>
+                            <span class="eye-icon" onclick="togglePasswordVisibility()">👁️</span>
+                        </div>
+                    </div>
+                    <div class="line">
+                        <label for="phone">Phone Number:</label>
+                        <input type="text" id="phone" name="phone" value="{{ user[3] }}" readonly>
+                    </div>
+                    <div class="line">
+                        <label for="address">Address:</label>
+                        <input type="text" id="address" name="address" value="{{ user[4] }}" readonly>
+                    </div>
+
+                    <!-- Edit/Save Buttons -->
+                    <div class="button-container">
+                        <button id="editButton" type="button" onclick="toggleEdit()">Edit</button>
+                        <button id="saveButton" type="submit" style="display: none;">Save</button>
+                    </div>
+                </form>
+
+                <!-- Success Message -->
+                <div id="successMessage" class="success-message">Profile updated successfully!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            const passwordFieldType = passwordField.type === "password" ? "text" : "password";
+            passwordField.type = passwordFieldType;
+        }
+
+        // Toggle Edit and Save buttons
+        function toggleEdit() {
+            // Get all input fields
+            const inputs = document.querySelectorAll('.line input');
+            const editButton = document.getElementById('editButton');
+            const saveButton = document.getElementById('saveButton');
+
+            // Toggle the 'readonly' attribute of input fields
+            inputs.forEach(input => {
+                input.readOnly = !input.readOnly;
+            });
+
+            // Toggle the visibility of the Save button
+            if (saveButton.style.display === "none") {
+                saveButton.style.display = "block";
+                editButton.style.display = "none";  // Hide the Edit button when editing
+            } else {
+                saveButton.style.display = "none";
+                editButton.style.display = "block"; // Show the Edit button when not editing
+            }
+        }
+    </script>
+</body>
+</html>

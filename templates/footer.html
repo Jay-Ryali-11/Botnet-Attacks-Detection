@@ -1,0 +1,122 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<style>
+    footer {
+       width: 100%;
+       background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+       padding: 40px 50px;
+       position: relative;  /* Changed from relative to fixed */
+       bottom: 0;
+       left: 0;  /* Ensure it's aligned to the bottom */
+       text-align: center;
+       color: white;
+       font-size: 16px;
+       box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
+       width: 100%;
+       z-index: 1000;  /* To ensure it's above other content */
+    }
+
+
+    footer .footer-container {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       max-width: 1200px;
+       margin: 0 auto;
+       flex-wrap: wrap;
+       transition: transform 0.3s ease;
+    }
+
+
+    footer .footer-container:hover {
+       transform: translateY(-5px); /* Slight lift effect */
+    }
+
+    footer .footer-left,
+    footer .footer-contact,
+    footer .footer-social {
+       flex: 1;
+       padding: 10px;
+    }
+
+    footer p {
+       font-size: 14px;
+       margin-bottom: 10px;
+       transition: color 0.3s ease;
+    }
+
+    footer p:hover {
+       color: #1e90ff; /* Add hover effect on text */
+    }
+
+    footer .footer-contact h3 {
+       color: #1e90ff;
+       font-size: 18px;
+       margin-bottom: 10px;
+    }
+
+    footer .footer-contact p {
+       font-size: 14px;
+    }
+
+    footer .footer-social ul {
+       list-style: none;
+       display: flex;
+       justify-content: flex-end;
+       padding: 0;
+    }
+
+    footer .footer-social ul li {
+       margin-left: 20px;
+       transition: transform 0.3s ease;
+    }
+
+    footer .footer-social ul li:hover {
+       transform: scale(1.1); /* Scale up icons slightly */
+    }
+
+    footer .footer-social ul li a {
+       color: white;
+       font-size: 24px;
+       transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    footer .footer-social ul li a:hover {
+       color: #1e90ff;
+       transform: translateY(-5px); /* Add hover effect to social links */
+    }
+
+    /* Add Font Awesome for Social Icons */
+    .fab {
+       font-size: 24px;
+    }
+
+</style>
+
+<body>
+      <footer>
+         <div class="footer-container">
+            <div class="footer-left">
+               <p>&copy; 2025 Botnet Attacks. All rights reserved.</p>
+               <p>Protecting IoT environments from botnet threats.</p>
+            </div>
+
+            <div class="footer-contact">
+               <h3>Contact Us</h3>
+               <p>Email: thecodexcipher@gmail.com</p>
+               <p>Phone: +91 81858 74261</p>
+            </div>
+
+            <div class="footer-social">
+               <ul>
+                  <li><a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                   <li><a href="https://www.instagram.com/shiva.bandaru.2982/#" target="_blank"><i class="fab fa-instagram"></i></a></li>
+                  <li><a href="https://x.com/umashan65033423?s=11" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                   <li><a href="https://youtube.com/" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                  <li><a href="https://www.linkedin.com/in/jaya-sai-sri-vardhan-ryali-25bb76237/" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+               </ul>
+            </div>
+         </div>
+      </footer>
+</body>

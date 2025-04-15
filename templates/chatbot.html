@@ -1,0 +1,468 @@
+<!-- Chatbot Button (Image) -->
+<div class="chatbot-button" id="chatbotButton">
+    <img src="{{ url_for('static', filename='images/bot.png') }}" alt="Chatbot Image" />
+</div>
+
+<!-- Chat Window -->
+<div class="chat-window" id="chatWindow">
+    <div class="chat-window-header">
+        <div class="header-content">
+            <img src="{{ url_for('static', filename='images/bot.png') }}" alt="Lucid Bot" class="header-icon">
+            <div class="header-name">Lucid</div>
+            <div class="online-status">
+                <div class="dot"></div>
+                <div>Online</div>
+            </div>
+        </div>
+        <div class="minimize-button" id="minimizeButton">&#x2013;</div> <!-- Minimize Icon -->
+    </div>
+    <div class="chat-window-body" id="chatBody">
+    </div>
+    <div class="chat-input-wrapper">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Type a message..." disabled /> <!-- Disabled initially -->
+        <button class="submit-button" id="submitButton" disabled>&#8594;</button> <!-- Disabled initially -->
+    </div>
+</div>
+
+<!-- Styles -->
+<style>
+    /* Chatbot Button (Image) */
+    .chatbot-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 70px;
+        height: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999;
+        animation: floatUpDown 2s ease-in-out infinite;
+        border-radius: 50%;
+    }
+
+    /* Floating animation for chatbot button */
+    @keyframes floatUpDown {
+        0% {
+            bottom: 30px;
+        }
+        50% {
+            bottom: 100px;
+        }
+        100% {
+            bottom: 30px;
+        }
+    }
+
+    .chatbot-button:hover {
+        box-shadow: 0 0 30px #1e90ff;
+        transform: scale(1.1);
+    }
+
+    .chatbot-button img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+
+    /* Chat Window */
+    .chat-window {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 400px;
+        height: 500px;
+        z-index: 9999;
+        background-color: rgba(0, 0, 0, 0.9);
+        border-radius: 15px;
+        display: none;
+        flex-direction: column;
+        opacity: 0;
+        transition: opacity 0.4s ease-in-out;
+    }
+
+    .chat-window.open {
+        opacity: 1;
+        display: flex;
+    }
+
+    /* Chat Window Header */
+    .chat-window-header {
+        display: flex;
+        align-items: center;
+        background-color: #1e90ff;
+        padding: 10px;
+        color: white;
+        font-weight: bold;
+        border-radius: 15px 15px 0 0;
+        justify-content: space-between;
+    }
+
+    /* Header Content - Bot Icon, Name, Dot, and Online Status */
+    .header-content {
+        display: flex;
+        align-items: center;
+    }
+
+    .header-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: contain;
+        margin-right: 10px;
+    }
+
+    .header-name {
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .online-status {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        color: white;
+        margin-left: 10px;
+    }
+
+    .online-status .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: white;
+        margin-right: 5px;
+    }
+
+    /* Minimize Button */
+    .minimize-button {
+        font-size: 30px;
+        cursor: pointer;
+        color: white;
+    }
+
+    /* Chat Window Body */
+    .chat-window-body {
+        flex-grow: 1;
+        padding: 15px;
+        overflow-y: auto;
+        color: white;
+        font-size: 16px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bot-message {
+        align-self: flex-start;
+        background-color: #333;
+        padding: 10px;
+        margin: 5px;
+        border-radius: 15px;
+        max-width: 75%;
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .bot-message img {
+        margin-right: 10px;
+    }
+
+    .user-message {
+        align-self: flex-end;
+        background-color: #1e90ff;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 15px;
+        max-width: 75%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        word-wrap: break-word;
+        margin-bottom: 15px;
+    }
+
+    .timestamp {
+        font-size: 12px;
+        color: #888;
+        position: absolute;
+        bottom: -18px;
+        left: 0;
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    /* Input Box */
+    .chat-input-wrapper {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        width: 100%;
+    }
+
+    .chat-input {
+        padding: 10px;
+        border: none;
+        border-top: 1px solid #1e90ff;
+        background-color: #212121;
+        color: white;
+        font-size: 14px;
+        width: 90%;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .chat-input:focus {
+        outline: none;
+    }
+
+    /* New Submit Button Style */
+    .submit-button {
+        cursor: pointer;
+        font-size: 18px;
+        color: white;
+        background-color: #1e90ff;
+        border: none;
+        padding: 12px;
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+    }
+
+    .submit-button:hover {
+        background-color: #167ac4;
+    }
+
+    .chatbot-button.hide {
+        display: none;
+    }
+
+    /* Typing Effect */
+    .typing {
+        font-size: 14px;
+        font-style: italic;
+        color: #888;
+    }
+</style>
+
+<script>
+    // Flag to check if welcome message has been shown
+    let welcomeMessageShown = sessionStorage.getItem("welcomeMessageShown") === "true";
+
+    // Toggle chat window visibility
+    const chatbotButton = document.getElementById("chatbotButton");
+    const chatWindow = document.getElementById("chatWindow");
+    const minimizeButton = document.getElementById("minimizeButton");
+    const chatBody = document.getElementById("chatBody");
+    const chatInput = document.getElementById("chatInput");
+    const submitButton = document.getElementById("submitButton");
+
+    chatbotButton.addEventListener("click", () => {
+        chatWindow.classList.toggle("open");
+        if (chatWindow.classList.contains("open")) {
+            chatbotButton.classList.add("hide");
+            if (!welcomeMessageShown) {
+                applyTypingEffect(); // Show the welcome message only the first time
+                welcomeMessageShown = true; // Set flag to true to prevent showing it again
+                sessionStorage.setItem("welcomeMessageShown", "true"); // Store flag in sessionStorage
+            } else {
+                enableInput(); // Ensure input is enabled if welcome message has been shown before
+            }
+        } else {
+            chatbotButton.classList.remove("hide");
+        }
+    });
+
+    // Minimize window
+    minimizeButton.addEventListener("click", () => {
+        chatWindow.classList.remove("open");
+        chatbotButton.classList.remove("hide"); // Restart floating animation
+    });
+
+    // Handle input and response
+    chatInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter" && chatInput.value.trim() !== "" && !submitButton.disabled) {
+            sendMessage();
+        }
+    });
+
+    submitButton.addEventListener("click", () => {
+        if (chatInput.value.trim() !== "" && !submitButton.disabled) {
+            sendMessage();
+        }
+    });
+
+    // Load messages from sessionStorage on page load
+    window.onload = function () {
+        loadMessages();
+    };
+
+    // Store messages in sessionStorage
+    function storeMessages() {
+        const messages = [];
+        const chatBodyChildren = chatBody.children;
+
+        // Loop through all messages in the chat window
+        for (let i = 0; i < chatBodyChildren.length; i++) {
+            const messageElement = chatBodyChildren[i];
+            const messageType = messageElement.classList.contains("user-message") ? "user" : "bot";
+            const messageText = messageElement.querySelector("span").textContent;
+            const timestamp = messageElement.querySelector(".timestamp").textContent;
+
+            messages.push({ messageType, messageText, timestamp });
+        }
+
+        // Save the messages in sessionStorage
+        sessionStorage.setItem("chatMessages", JSON.stringify(messages));
+    }
+
+    // Load messages from sessionStorage
+    function loadMessages() {
+        const savedMessages = JSON.parse(sessionStorage.getItem("chatMessages"));
+        if (savedMessages) {
+            savedMessages.forEach((msg) => {
+                const messageElement = document.createElement("div");
+                messageElement.classList.add(msg.messageType === "user" ? "user-message" : "bot-message");
+
+                // Create the message text
+                const messageText = document.createElement("span");
+                messageText.textContent = msg.messageText;
+                messageElement.appendChild(messageText);
+
+                // Create the timestamp
+                const timestamp = document.createElement("div");
+                timestamp.classList.add("timestamp");
+                timestamp.textContent = msg.timestamp;
+                messageElement.appendChild(timestamp);
+
+                // Append the message to the chat window
+                chatBody.appendChild(messageElement);
+            });
+
+            // Scroll to the bottom to make sure the latest message is visible
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    }
+
+    function sendMessage() {
+        const userMessage = chatInput.value.trim();
+
+        // Add user message with timestamp
+        const userMessageElement = document.createElement("div");
+        userMessageElement.classList.add("user-message");
+
+        // Create the user message text
+        const userText = document.createElement("span");
+        userText.textContent = userMessage;
+
+        // Create the timestamp for the user message
+        const userTimestamp = document.createElement("div");
+        userTimestamp.classList.add("timestamp");
+        userTimestamp.textContent = new Date().toLocaleTimeString();
+
+        // Append the message text and timestamp
+        userMessageElement.appendChild(userText);
+        userMessageElement.appendChild(userTimestamp);
+        chatBody.appendChild(userMessageElement);
+
+        // Add bot message placeholder with timestamp
+        const botMessageElement = document.createElement("div");
+        botMessageElement.classList.add("bot-message");
+        const botIcon = document.createElement("img");
+        botIcon.src = "{{ url_for('static', filename='images/bot.png') }}";
+        botIcon.style.width = "20px"; // Proper size for the bot icon
+        botIcon.style.height = "30px"; // Proper size for the bot icon
+        botMessageElement.appendChild(botIcon);
+        const botText = document.createElement("span");
+        botMessageElement.appendChild(botText);
+        const botTimestamp = document.createElement("div");
+        botTimestamp.classList.add("timestamp");
+        botTimestamp.textContent = new Date().toLocaleTimeString();
+        botMessageElement.appendChild(botTimestamp);
+        chatBody.appendChild(botMessageElement);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Disable the input and submit button while waiting for the response
+        chatInput.disabled = true;
+        submitButton.disabled = true;
+
+        // Clear the input field immediately after sending the message
+        chatInput.value = "";
+
+        // Fetch response from backend and update bot message with typing effect
+        fetch('/get_response', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: userMessage })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const botResponse = data.response;
+            simulateTypingEffect(botResponse, botText);
+        })
+        .catch(error => {
+            console.error('Error fetching response:', error);
+            botText.textContent = "Sorry, there was an error. Please try again.";
+            enableInput(); // Enable input after error
+        });
+    }
+
+    // Simulate typing effect for the bot's response
+    function simulateTypingEffect(responseText, botTextElement) {
+        let i = 0;
+        const typingInterval = setInterval(() => {
+            botTextElement.textContent += responseText.charAt(i);
+            i++;
+            if (i === responseText.length) {
+                clearInterval(typingInterval);
+                enableInput(); // Enable input after typing effect finishes
+
+                // Store messages after the bot response is fully typed
+                storeMessages();
+            }
+        }, 50); // Set typing speed to 50ms per character
+    }
+
+    // Apply typing effect to the welcome message when chat window is opened
+    function applyTypingEffect() {
+        const welcomeMessage = "Welcome to the Botnet Attack Application! How can I help you?";
+        const botMessageElement = document.createElement("div");
+        botMessageElement.classList.add("bot-message");
+        const botIcon = document.createElement("img");
+        botIcon.src = "{{ url_for('static', filename='images/bot.png') }}";
+        botIcon.style.width = "20px"; // Proper size for the bot icon
+        botIcon.style.height = "30px"; // Proper size for the bot icon
+        botMessageElement.appendChild(botIcon);
+        const botText = document.createElement("span");
+        botMessageElement.appendChild(botText);
+        const botTimestamp = document.createElement("div");
+        botTimestamp.classList.add("timestamp");
+        botTimestamp.textContent = new Date().toLocaleTimeString();
+        botMessageElement.appendChild(botTimestamp);
+        chatBody.appendChild(botMessageElement);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Simulate typing effect for welcome message
+        let i = 0;
+        const typingInterval = setInterval(() => {
+            botText.textContent += welcomeMessage.charAt(i);
+            i++;
+            if (i === welcomeMessage.length) {
+                clearInterval(typingInterval);
+                enableInput(); // Enable input after welcome message is done typing
+            }
+        }, 35); // Set typing speed to 35ms per character
+    }
+
+    // Enable chat input and submit button
+    function enableInput() {
+        chatInput.disabled = false;
+        submitButton.disabled = false;
+        chatInput.focus();
+    }
+</script>
