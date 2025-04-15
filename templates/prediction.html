@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Botnet Application - Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
+            background: black;
+            overflow-x: hidden;
+        }
+
+        /* Full-Screen Video */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+        .video-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(8px) brightness(30%);
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            padding: 20px 50px;
+            position: fixed;
+            top: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        header div a {
+            color: white;
+            font-size: 26px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+        nav ul li {
+            margin-left: 25px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: 0.3s ease-in-out;
+        }
+        nav ul li a:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 15px #1e90ff, 0 0 25px #1e90ff;
+            font-weight: bold;
+        }
+
+        /* Prediction Form Container */
+        .container {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1000px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* Flex container for Heading and Dropdown */
+        .heading-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 4px solid #1e90ff;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+
+        /* Heading Styling */
+        .heading-text {
+            font-size: 32px;
+            color: white;
+            text-align: center;
+            text-transform: uppercase;
+            flex-grow: 1;
+            padding-left: 230px;
+        }
+
+        /* Form Layout */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .form-group {
+            flex: 1 1 calc(33.333% - 20px);
+            margin-bottom: 20px;
+        }
+
+        .custom-input, .custom-select {
+            border-radius: 10px;
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            font-size: 14px;
+            padding: 10px;
+            outline: none;
+            width: 100%;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        .custom-input:focus, .custom-select:focus {
+            border-color: #1e90ff;
+            box-shadow: 0 0 8px rgba(30, 144, 255, 0.7);
+        }
+
+        /* Submit Button */
+        .custom-btn {
+            padding: 12px 16px;
+            font-size: 16px;
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            width: auto;
+            margin-top: 20px;
+            transition: background-color 0.3s ease-in-out;
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+        .custom-btn:hover {
+            background-color: #1478d4;
+        }
+
+        /* Message Display */
+        .result-msg {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: rgba(30, 144, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .form-group {
+                flex: 1 1 100%;
+            }
+            .container {
+                width: 95%;
+            }
+        }
+
+        /* Custom Dropdown Styling for Select Algorithm */
+        .custom-select {
+            width: 220px;
+            font-size: 14px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-select option {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+
+        .custom-select:focus {
+            border-color: #1e90ff;
+            box-shadow: 0 0 8px rgba(30, 144, 255, 0.7);
+        }
+
+        .custom-select:hover {
+            border-color: #1e90ff;
+            box-shadow: 0 0 8px rgba(30, 144, 255, 0.4);
+        }
+
+        .custom-select option:hover {
+            background-color: #444;
+        }
+
+        /* Tooltip Styling */
+        [data-tooltip] {
+            position: relative;
+        }
+
+        [data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #151515;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        [data-tooltip]:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div><a href="{{ url_for('prediction') }}">Hi {{ user_name }}</a></div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('viewdata') }}">View Data</a></li>
+                <li><a href="{{ url_for('algo') }}">Algorithm</a></li>
+                <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
+                <li class="active"><a href="{{ url_for('prediction') }}">Prediction</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Full-Screen Video -->
+    <div class="video-container">
+        <video class="video-bg" autoplay loop muted>
+            <source src="{{ url_for('static', filename='videos/home_background.mp4') }}" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Prediction Form -->
+    <div class="container">
+        <div class="heading-container">
+            <h2 class="heading-text">Prediction</h2>
+
+            <form method="POST" action="{{ url_for('prediction') }}" onsubmit="return validateForm()">
+            <div class="form-group" data-tooltip="Select the algorithm to use for prediction.">
+                <select id="algorithm" name="algorithm" class="custom-select" required>
+                    <option value="">Select an Algorithm</option>
+                    <option value="ANN">ANN (Artificial Neural Networks)</option>
+                    <option value="RNN">RNN (Recurrent Neural Networks)</option>
+                    <option value="LSTM">LSTM (Long Short-Term Memory)</option>
+                </select>
+            </div>
+        </div>
+
+            <!-- Form Input Fields -->
+            <div class="form-row">
+                <div class="form-group" data-tooltip="Enter the source bytes transmitted in the packet exchange.">
+                    <label for="sbytes"><b>Source Bytes:</b></label>
+                    <input type="text" id="sbytes" name="sbytes" class="custom-input" required>
+                </div>
+                <div class="form-group" data-tooltip="Enter the destination bytes transmitted in the packet exchange.">
+                    <label for="dbytes"><b>Destination Bytes:</b></label>
+                    <input type="text" id="dbytes" name="dbytes" class="custom-input" required>
+                </div>
+                <div class="form-group" data-tooltip="Enter the rate of packets being transmitted.">
+                    <label for="rate"><b>Rate:</b></label>
+                    <input type="text" id="rate" name="rate" class="custom-input" required>
+                </div>
+                <div class="form-group" data-tooltip="Enter the load of the source on the network.">
+                    <label for="sload"><b>Source Load:</b></label>
+                    <input type="text" id="sload" name="sload" class="custom-input" required>
+                </div>
+                <div class="form-group" data-tooltip="Enter the load of the destination on the network.">
+                    <label for="dload"><b>Destination Load:</b></label>
+                    <input type="text" id="dload" name="dload" class="custom-input" required>
+                </div>
+                <div class="form-group" data-tooltip="Enter the number of packets sent from the source.">
+                    <label for="sinpkt"><b>Source Inpackets:</b></label>
+                    <input type="text" id="sinpkt" name="sinpkt" class="custom-input" required>
+                </div>
+                <div class="form-group" data-tooltip="Enter the jitter in packet transmission from source.">
+                    <label for="sjit"><b>Source Jitter:</b></label>
+                    <input type="text" id="sjit" name="sjit" class="custom-input" required>
+                </div>
+                <div class="form-group" data-tooltip="Enter the source TCP packets.">
+                    <label for="stcpb"><b>Source TCP Bytes:</b></label>
+                    <input type="text" id="stcpb" name="stcpb" class="custom-input" required>
+                </div>
+                <div class="form-group" data-tooltip="Enter the destination TCP packets.">
+                    <label for="dtcpb"><b>Destination TCP Bytes:</b></label>
+                    <input type="text" id="dtcpb" name="dtcpb" class="custom-input" required>
+                </div>
+                <div class="form-group" data-tooltip="Enter the length of the response body in bytes.">
+                    <label for="response_body_len"><b>Response Body Length:</b></label>
+                    <input type="text" id="response_body_len" name="response_body_len" class="custom-input" required>
+                </div>
+            </div>
+
+            <button type="submit" class="custom-btn">Submit</button>
+
+            {% if msg %}
+            <div class="result-msg">
+                <p>{{ msg }}</p>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <script>
+        function validateForm() {
+            const algorithm = document.getElementById('algorithm').value;
+            if (algorithm === "") {
+                alert("Please select an algorithm!");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

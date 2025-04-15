@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
+            background-color: #121212;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding-top: 1450px;
+        }
+
+        .container h1 {
+            text-align: center;
+            margin: 50px 0;
+            color: white;
+            left: 20%;
+            font-size: 3rem;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 3px;
+        }
+
+        .container h1::after {
+            content: "";
+            position: absolute;
+            bottom: 20px; /* Adjust the bottom to move the underline just below the text */
+            left: 100%;
+            transform: translateX(-50%);
+            width: 190%; /* Adjust the width of the underline */
+            border-bottom: 4px solid #1e90ff; /* Blue underline */
+        }
+
+        .container h1 span {
+            background-color: rgba(0, 0, 0, 0.7); /* Black background behind the text */
+            padding: 20px 40px; /* Padding for space around the text */
+            border-radius: 15px;
+            display: inline-block; /* Ensures background is just behind the text */
+            width: 200%;
+            text-align: center;
+        }
+
+        .developer-block {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            margin: 55px 0; /* Increased margin for more space between cards */
+            padding: 40px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            transform: translateY(150px);
+            opacity: 0;
+            transition: transform 1s ease-out, opacity 1s ease-out;
+            position: relative;
+            width: 80%;
+            max-width: 90%;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: nowrap;
+        }
+
+        .developer-block:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        .developer-block.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .developer-image {
+            width: 350px;
+            height: 350px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-right: 30px;
+            flex-shrink: 0;
+            will-change: transform;
+        }
+
+        /* Shine Effect */
+        .developer-image::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            opacity: 0;
+            transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+        }
+
+        .developer-block:hover .developer-image {
+            transform: translateY(-5px);
+            box-shadow: 0 0 35px rgba(30, 144, 255, 0.9);
+        }
+
+        .developer-block:hover .developer-image::after {
+            opacity: 1;
+            transform: translateX(300%);
+        }
+
+        .developer-details {
+            max-width: 100%;
+            text-align: justify;
+            flex-grow: 1;
+            word-wrap: break-word;
+            padding-right: 20px;
+            white-space: normal;
+            overflow: hidden;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .developer-details h2 {
+            color: #1e90ff;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .developer-details p {
+            font-size: 18px;
+            color: white;
+            line-height: 1.6;
+            visibility: hidden; /* Hide initially to apply typing effect */
+        }
+
+        .social-icons {
+            display: none; /* Initially hide the icons */
+        }
+
+        .social-icons a {
+            font-size: 24px;
+            margin-right: 10px;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: #1e90ff;
+        }
+
+        @media (max-width: 768px) {
+            .developer-block {
+                flex-direction: column;
+                text-align: center;
+                padding: 25px;
+            }
+
+            .developer-image {
+                width: 100%;
+                height: 250px;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+
+            .developer-details {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1><span>Meet Our Developers</span></h1>
+
+        <!-- Developer 1 -->
+        <div class="developer-block scroll-effect">
+            <img class="developer-image" src="{{ url_for('static', filename='images/dev1.jpg') }}" alt="Developer 1">
+<!--            <div class="developer-image" style="background-image: url('https://i.pinimg.com/736x/53/80/b8/5380b8e4452f0298a72971e4d71139fc.jpg');"></div>-->
+            <div class="developer-details">
+                <h2>Jaya Sai Sri Vardhan Ryali</h2>
+                <p id="dev1">As a developer specializing in backend systems, cloud technologies, DevOps practices, and front-end development, I am committed to creating scalable, efficient, and user-centric web applications. With a strong foundation in backend development, I ensure that the core of the application is robust, capable of handling complex data processing and storage with ease. My expertise in cloud computing allows me to build cloud-native applications that are highly available, cost-effective, and easily scalable. In addition, I integrate DevOps practices to automate workflows, streamline deployment processes, and monitor system performance, ensuring the highest level of reliability and uptime. I also contribute significantly to the front-end development, ensuring seamless integration of user interfaces with backend systems to deliver a cohesive user experience. Furthermore, I have a keen interest in developing intelligent chatbots that enhance user interaction and provide real-time assistance. By leveraging machine learning and natural language processing, I work towards building chatbots that can understand and respond effectively to user queries, improving engagement and support. My goal is to create web applications that are not only technically robust but also user-friendly and interactive.</p>
+                <div class="social-icons">
+                    <a href="mailto:jayasaisrivardhanryali@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
+                    <a href="https://www.linkedin.com/in/jaya-sai-sri-vardhan-ryali-25bb76237/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://x.com/SriVardhan1111/" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Developer 2 -->
+        <div class="developer-block scroll-effect">
+            <img class="developer-image" src="{{ url_for('static', filename='images/dev2.jpg') }}" alt="Developer 2">
+<!--            <div class="developer-image" style="background-image: url('https://i.pinimg.com/736x/91/08/a8/9108a8266fc5d19659089a2712fb045e.jpg');"></div>-->
+            <div class="developer-details">
+                <h2>Shiva Sai Prasad Bandaru</h2>
+                <p id="dev2">Hi, I am Shiva Sai Prasad Bandaru, As an AI/ML student with a keen interest in cloud computing and machine learning, Shiva understands the critical importance of detecting botnet attacks. Botnet attacks, often orchestrated through a network of infected devices, can disrupt services, steal sensitive data, and cause significant financial losses. By contributing to the development of detection models, Shiva aims to help create more robust systems that can identify and mitigate such attacks early. Leveraging machine learning algorithms, he is working towards improving the accuracy and efficiency of botnet detection, ultimately enhancing cybersecurity in cloud-based environments.</p>
+                <div class="social-icons">
+                    <a href="mailto:shivabandaru27@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
+                    <a href="https://www.linkedin.com/in/shiva-sai-prasad-bandaru-5574a0237/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.instagram.com/shiva.bandaru.2982/#" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Developer 3 -->
+        <div class="developer-block scroll-effect">
+            <img class="developer-image" src="{{ url_for('static', filename='images/dev3.jpg') }}" alt="Developer 3">
+<!--            <div class="developer-image" style="background-image: url('https://i.pinimg.com/736x/63/3a/cf/633acf7e31a0780ebd9132c62562bed5.jpg');"></div>-->
+            <div class="developer-details">
+                <h2>Uma Shankar Neelam</h2>
+                <p id="dev3">As a student with a strong interest in Machine Learning and Front-End Development, I understand the growing importance of leveraging advanced technologies to enhance both user experience and security. While I am passionate about creating intuitive and visually appealing front-end designs, I also recognize the power of machine learning in solving complex problems. By integrating machine learning techniques with front-end development, I aim to contribute to creating more intelligent, responsive, and user-friendly web applications. I am constantly exploring how I can use my skills to improve the user interface while making systems smarter and more efficient through machine learning.</p>
+                <div class="social-icons">
+                    <a href="mailto:shankarn9060@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
+                    <a href="https://www.linkedin.com/in/uma-shankar-neelam-b97494232/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.instagram.com/___.shankar.____/#" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function for typing effect
+        function typeEffect(id, text, speed, callback) {
+            var element = document.getElementById(id);
+            var i = 0;
+            element.innerHTML = "";
+            element.style.visibility = 'visible';
+            var interval = setInterval(function () {
+                element.innerHTML += text.charAt(i);
+                i++;
+                if (i > text.length) {
+                    clearInterval(interval);
+                    callback();  // Call the callback after typing is complete
+                }
+            }, speed);
+        }
+
+        window.addEventListener('scroll', function () {
+            let scrollElements = document.querySelectorAll('.scroll-effect');
+            scrollElements.forEach(function (element) {
+                let position = element.getBoundingClientRect().top;
+                let windowHeight = window.innerHeight;
+
+                if (position < windowHeight - 100) {
+                    element.classList.add('visible');
+
+                    // Trigger the typing effect when the card becomes visible
+                    const id = element.querySelector('.developer-details p').id;
+                    if (id && !document.getElementById(id).classList.contains('typed')) {
+                        document.getElementById(id).classList.add('typed');
+                        const text = getDeveloperText(id);
+                        const speed = 25;
+                        const socialIcons = element.querySelector('.social-icons');
+                        typeEffect(id, text, speed, function () {
+                            socialIcons.style.display = 'block'; // Show social icons after typing
+                        });
+                    }
+                }
+            });
+        });
+
+        // Function to return the correct text based on the developer id
+        function getDeveloperText(id) {
+            switch (id) {
+                case 'dev1':
+                    return 'As a developer specializing in backend systems, cloud technologies and DevOps practices, I focus on creating scalable, efficient, and user-friendly web applications. My expertise in backend development ensures robust and seamless data processing, while cloud technologies enable me to build highly available and cost-effective cloud-native applications. I integrate DevOps practices to streamline workflows, automate deployments, and monitor performance for optimal reliability. In addition, I contribute to front-end development, ensuring smooth integration with backend systems. I also have a strong interest in developing intelligent chatbots that use machine learning and natural language processing to enhance user interaction and provide real-time support. My goal is to create applications that are both technically robust and user-centric.';
+                case 'dev2':
+                    return 'As an AI/ML student with a keen interest in cloud computing and machine learning, I recognize the critical importance of detecting botnet attacks. Botnet attacks, which are often orchestrated through a network of infected devices, have the potential to disrupt services, steal sensitive data, and cause significant financial losses. I believe that by contributing to the development of advanced detection models, I can play a role in creating more robust systems that identify and mitigate these attacks at an early stage. By leveraging machine learning algorithms, I am working towards improving the accuracy and efficiency of botnet detection, with the ultimate goal of enhancing cybersecurity, especially in cloud-based environments.';
+                case 'dev3':
+                    return 'As a student with a strong interest in Machine Learning and Front-End Development, I understand the growing importance of leveraging advanced technologies to enhance both user experience and security. While I am passionate about creating intuitive and visually appealing front-end designs, I also recognize the power of machine learning in solving complex problems. By integrating machine learning techniques with front-end development, I aim to contribute to creating more intelligent, responsive, and user-friendly web applications. I am constantly exploring how I can use my skills to improve the user interface while making systems smarter and more efficient through machine learning.';
+                default:
+                    return '';
+            }
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Botnet Application - Algorithms</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Custom scrollbar */
+         ::-webkit-scrollbar {
+            width: 5px; /* Width of the vertical scrollbar */
+         }
+
+         ::-webkit-scrollbar-track {
+            background-color: #121212; /* Dark background for the track */
+         }
+
+         ::-webkit-scrollbar-thumb {
+            background-color: #1e90ff; /* Blue color for the thumb (the part that moves) */
+         }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
+            background: black;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* Video Background */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+        .video-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(30%) blur(8px);
+        }
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            padding: 20px 50px;
+            position: absolute;
+            top: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        header div a {
+            color: white;
+            font-size: 26px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+        nav ul li {
+            margin-left: 25px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: 0.3s ease-in-out;
+        }
+        nav ul li a:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 15px #1e90ff, 0 0 25px #1e90ff;
+            font-weight: bold;
+        }
+
+        /* Algorithm Section */
+        .algo-section {
+            width: 85%;
+            max-width: 1200px;
+            padding: 60px 30px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            margin: 130px auto;
+        }
+        .algo-section h2 {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        /* Custom Underline Styling */
+        .blue-underline {
+            border-bottom: 4px solid #1e90ff; /* Blue underline */
+            padding-bottom: 10px;  /* Add some space under the heading */
+        }
+
+
+        /* Card Container */
+        .algo-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: nowrap;
+            padding: 10px;
+        }
+
+        /* Individual Cards */
+        .algo-card {
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            width: 300px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .algo-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .algo-card h3 {
+            margin-top: 15px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        /* Shine Effect on Hover */
+        .algo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(30, 144, 255, 0.8);
+        }
+
+        .algo-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            opacity: 0;
+            transition: transform 0.7s ease-in-out, opacity 0.7s ease-in-out;
+        }
+
+        .algo-card:hover::after {
+            opacity: 1;
+            transform: translateX(300%);
+        }
+
+        /* Hidden Content Section */
+        .algo-details {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(30, 144, 255, 0.6);
+            text-align: justify;
+            width: 85%; /* Set width to match .algo-section */
+            max-width: 1200px; /* Optional: same max-width as .algo-section */
+            margin-left: auto; /* Center it horizontally */
+            margin-right: auto; /* Center it horizontally */
+        }
+        .algo-details h3 {
+            font-size: 26px;
+            margin-bottom: 10px;
+            color: #1e90ff;
+        }
+        .algo-details p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* Calculate Accuracy Button */
+        .accuracy-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid #1e90ff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+        }
+
+        .accuracy-btn:hover {
+            background: #1e90ff;
+            color: black;
+            box-shadow: 0 0 20px rgba(30, 144, 255, 1);
+        }
+
+        /* Circular Accuracy Indicator */
+        .accuracy-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: transparent; /* No outer border */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Water floating effect */
+        .accuracy-water {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(180deg, #00bfff 0%, #000 100%);
+            clip-path: circle(50%);
+            transition: height 1s ease-in-out, transform 1s ease-in-out;
+        }
+
+        /* Text inside the circle */
+        .accuracy-text {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            z-index: 2;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div><a href="{{ url_for('algo') }}">Hi {{ user_name }}</a></div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('viewdata') }}">View Data</a></li>
+                <li class="active"><a href="{{ url_for('algo') }}">Algorithm</a></li>
+                <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
+                <li><a href="{{ url_for('prediction') }}">Prediction</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Video Background -->
+    <div class="video-container">
+        <video class="video-bg" autoplay loop muted>
+            <source src="{{ url_for('static', filename='videos/home_background.mp4') }}" type="video/mp4">
+        </video>
+    </div>
+    <div class="video-overlay"></div>
+
+    <!-- Algorithm Section -->
+    <div class="algo-section">
+        <h2 class="blue-underline">Machine Learning Algorithms</h2>
+
+        <div class="algo-container">
+            <div class="algo-card" onclick="showDetails('ann')">
+                <img src="{{ url_for('static', filename='images/ann.jpg') }}" alt="Artificial Neural Network">
+                <h3>Artificial Neural Network</h3>
+            </div>
+
+            <div class="algo-card" onclick="showDetails('rnn')">
+                <img src="{{ url_for('static', filename='images/rnn.jpg') }}" alt="Recurrent Neural Network">
+                <h3>Recurrent Neural Network</h3>
+            </div>
+
+            <div class="algo-card" onclick="showDetails('lstm')">
+                <img src="{{ url_for('static', filename='images/lstm.jpg') }}" alt="Long Short Term Memory">
+                <h3>Long Short Term Memory</h3>
+            </div>
+        </div>
+
+        <div id="algo-info" class="algo-details">
+            <!-- Accuracy will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        function showDetails(algo) {
+            let details = {
+                'ann': "<h3>Artificial Neural Network (ANN)</h3><p>Artificial Neural Networks (ANNs) are computational models inspired by the structure and functioning of biological neural networks in the brain. They consist of multiple layers of interconnected nodes (or neurons), each of which processes input data and passes it through to the next layer. ANNs are a fundamental technology in machine learning and deep learning due to their ability to recognize complex patterns, classify data, and perform regression tasks. They are commonly used in applications like image recognition, natural language processing, and predictive analytics.</p><br>" +
+                       "<h3>How this is important to detect botnet attacks</h3><p>ANNs are highly effective in detecting botnet attacks because they can analyze large-scale network traffic and identify patterns that deviate from typical behavior. In the context of botnet detection, ANNs are trained on data representing normal traffic patterns, enabling them to classify new network activity as either benign or malicious. They are particularly useful for detecting abnormal traffic behaviors such as a surge in requests from suspicious IP addresses or an unusual number of access attempts. These patterns are common indicators of botnet activity, including DDoS (Distributed Denial of Service) attacks or malware-driven communication within a network.</p>",
+
+                'rnn': "<h3>Recurrent Neural Network (RNN)</h3><p>Recurrent Neural Networks (RNNs) are a type of neural network designed to process sequential data. Unlike traditional neural networks, RNNs have loops in their architecture, allowing information to persist and be carried forward through the network. This feature makes RNNs especially suited for time-series data, where the order and context of inputs are crucial, such as in tasks like speech recognition, text generation, and time-series forecasting.</p><br>" +
+                       "<h3>How this is important to detect botnet attacks</h3><p>RNNs are valuable in botnet attack detection because they can model temporal relationships in network traffic. Botnet behaviors, like data exfiltration or DDoS attacks, often unfold over time and exhibit sequential patterns. RNNs can learn to detect these time-dependent patterns by analyzing traffic sequences and recognizing anomalies, such as repeated access attempts or unusual patterns of communication that might suggest a botnet is at work. By observing traffic trends over time, RNNs can help identify evolving attack strategies before they escalate into major security threats.</p><br>",
+
+                'lstm': "<h3>Long Short-Term Memory (LSTM)</h3><p>Long Short-Term Memory (LSTM) networks are an advanced type of Recurrent Neural Network (RNN) designed to overcome limitations like the vanishing gradient problem. LSTMs have specialized memory cells that allow them to store and recall information over long periods, which makes them particularly well-suited for tasks that require learning from long-term dependencies, such as time-series analysis, language translation, and sequential data prediction.</p><br>" +
+                        "<h3>How this is important to detect botnet attacks</h3><p>LSTMs are particularly effective in detecting botnet attacks due to their ability to capture and remember long-term dependencies in network traffic. Botnet activity often spans over extended periods and may involve subtle, gradual patterns like slow data exfiltration or prolonged DDoS attacks. LSTMs can track these long-term behaviors and detect anomalies that develop over time, which might otherwise go unnoticed by more traditional detection systems. Their ability to understand complex temporal relationships enables LSTMs to identify more sophisticated botnet attacks that evolve and adapt to avoid detection.</p><br>"
+            };
+
+            document.getElementById('algo-info').innerHTML = details[algo] + '<button class="accuracy-btn" onclick="calculateAccuracy(\'' + algo + '\')">Calculate Accuracy</button>';
+            document.getElementById('algo-info').style.display = 'block';
+        }
+
+        function calculateAccuracy(model) {
+            // Send GET request to Flask to get the accuracy for the selected model
+            fetch(`/get_accuracy?model=${model}`)
+                .then(response => response.json())
+                .then(data => {
+                    let accuracy = data.accuracy;
+                    updateAccuracyDisplay(accuracy);
+                })
+                .catch(error => {
+                    console.error('Error fetching accuracy:', error);
+                });
+        }
+
+        function updateAccuracyDisplay(accuracy) {
+            const accuracyPercentage = accuracy;
+            console.log(accuracyPercentage)
+            let existingAccuracyContainer = document.querySelector('.accuracy-container');
+            if (existingAccuracyContainer) {
+                existingAccuracyContainer.remove();
+            }
+            const accuracyContainer = document.createElement('div');
+            accuracyContainer.classList.add('accuracy-container');
+
+            const accuracyWater = document.createElement('div');
+            accuracyWater.classList.add('accuracy-water');
+            accuracyWater.style.height = `0%`;
+
+            // Create the text container to display the accuracy percentage
+            const accuracyText = document.createElement('div');
+            accuracyText.classList.add('accuracy-text');
+            accuracyText.textContent = `0%`;
+
+            // Append the water effect and text to the accuracy container
+            accuracyContainer.appendChild(accuracyWater);
+            accuracyContainer.appendChild(accuracyText);
+
+            // Append the accuracy container to the algorithm info section
+            const algoInfo = document.getElementById('algo-info');
+            algoInfo.appendChild(accuracyContainer);
+
+            // Animate the water level and text change over time to simulate the "floating" effect
+            let currentHeight = 0;
+            const targetHeight = accuracyPercentage;
+            const increment = targetHeight / 50;
+            // Update the water level and text every 30ms
+            const interval = setInterval(() => {
+                if (currentHeight <= targetHeight) {
+                    currentHeight += increment;
+                    accuracyWater.style.height = `${currentHeight}%`;
+                    accuracyText.textContent = `${Math.min(Math.round(currentHeight), targetHeight)}%`;
+                } else {
+                    clearInterval(interval); // Stop the animation once target height is reached
+                }
+            }, 30);
+        }
+    </script>
+</body>
+</html>

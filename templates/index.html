@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+      <title>Botnet Attacks</title>
+      <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+      <style>
+         /* Custom scrollbar */
+         ::-webkit-scrollbar {
+            width: 5px; /* Width of the vertical scrollbar */
+         }
+
+         ::-webkit-scrollbar-track {
+            background-color: #121212; /* Dark background for the track */
+         }
+
+         ::-webkit-scrollbar-thumb {
+            background-color: #1e90ff; /* Blue color for the thumb (the part that moves) */
+         }
+
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+         }
+
+         body {
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
+            overflow-x: hidden; /* Allow scrolling without showing the scrollbar */
+            height: 200vh; /* Increased height for scrolling effect */
+            background-color: #121212; /* Set a solid dark background */
+         }
+
+         /* Background Video */
+         .background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: blur(8px); /* Apply blur effect */
+         }
+
+         .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+         }
+
+         /* Typing Effect Container for Main Heading */
+         .typing-container {
+            position: absolute;
+            top: 45%; /* Initial position */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 55px; /* Bigger text size */
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 4px solid white; /* Cursor effect */
+            animation: typing 5s steps(40, end) forwards, blink 0.7s infinite;
+            max-width: 90%;
+            transition: transform 0.2s ease-out; /* Smooth zooming transition */
+         }
+
+         /* Typing Effect */
+         @keyframes typing {
+            from {
+               width: 0;
+            }
+            to {
+               width: 100%;
+            }
+         }
+
+         /* Blinking Cursor */
+         @keyframes blink {
+            50% {
+               border-color: transparent;
+            }
+         }
+
+         /* Header and Navigation */
+         header {
+            width: 100%;
+            padding: 20px 50px;
+            position: absolute;
+            top: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+         }
+         header div a {
+            color: white;
+            font-size: 26px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+         }
+         nav ul {
+            list-style: none;
+            display: flex;
+         }
+         nav ul li {
+            margin-left: 25px;
+         }
+         nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: 0.3s ease-in-out;
+            position: relative;
+         }
+
+         /* Dark Blue Glow Effect on Hover */
+         nav ul li a:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 10px #1e90ff, 0 0 20px #1e90ff;
+            font-weight: bold;
+         }
+
+         @media (max-width: 768px) {
+            header {
+               flex-direction: column;
+               text-align: center;
+               padding: 15px;
+            }
+            nav ul {
+               padding-top: 10px;
+               flex-direction: column;
+               align-items: center;
+            }
+            nav ul li {
+               margin: 8px 0;
+            }
+         }
+
+        .blue-underline {
+            border-bottom: 4px solid #1e90ff; /* Blue underline */
+            padding-bottom: 10px;  /* Add some space under the heading */
+        }
+
+         /* About Section Heading */
+         .about-heading {
+            font-size: 28px;  /* Adjust size for heading */
+            font-weight: 600; /* Make it bold */
+            color: white;     /* White text color */
+            margin-bottom: 15px;  /* Space between heading and content */
+            text-align: center;   /* Center the heading */
+         }
+
+         /* About Section Container */
+         #about {
+            position: relative;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 90%;
+            text-align: justify;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7); /* Black dimmed background */
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: 400;
+            color: white;
+            max-height: 350px;
+            overflow: hidden; /* Ensures text doesn’t overflow */
+         }
+
+         /* Typing Effect for About Section */
+         .about-typing-container {
+            font-size: 24px;
+            font-weight: 500;
+            color: white;
+            text-align: justify;
+            white-space: normal;
+            overflow: hidden;
+            max-width: 100%;
+            line-height: 1.6;
+         }
+
+      </style>
+   </head>
+   <body>
+      <!-- Header -->
+      <header>
+         <div><a href="{{ url_for('index') }}">BOTNET ATTACKS</a></div>
+         <nav>
+            <ul>
+               <li><a href="{{ url_for('index') }}">HOME</a></li>
+               <li><a href="{{ url_for('about') }}">ABOUT</a></li>
+               <li><a href="{{ url_for('login') }}">Get Started</a></li>
+               <li><a href="{{ url_for('support') }}">Support</a></li>
+            </ul>
+         </nav>
+      </header>
+
+      <!-- Background Video -->
+      <div class="video-container">
+         <video autoplay loop muted class="background-video">
+            <source src="{{ url_for('static', filename='videos/home_background3.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+         </video>
+      </div>
+
+
+      <!-- Main Typing Effect Text -->
+      <div class="typing-container" id="zoomText">
+         Botnet Attacks in IoT Environments
+      </div>
+      <br><br><br><br><br><br><br>
+
+      <!-- About Section with Typing Effect -->
+      <div id="about">
+         <!-- About Heading -->
+         <h2 class="about-heading blue-underline">About</h2>
+         <div class="about-typing-container" id="about-text">
+            <!-- Typing effect for About Section will appear here -->
+         </div>
+      </div>
+
+      <!--Chatbot html      <>-->
+      {% include 'chatbot.html' %}
+
+      <!--developers html   <>-->
+      {% include 'developer.html' %}
+
+      <!--footer html   <>-->
+      {% include 'footer.html' %}
+
+   <script>
+      const typeWriterEffect = (element, text, speed = 60) => {
+         let i = 0;
+         const interval = setInterval(() => {
+            element.innerHTML += text[i];
+            i++;
+            if (i === text.length) clearInterval(interval);
+         }, speed);
+      }
+
+      const aboutText = "Botnets are networks of infected devices that can be used for malicious purposes, and IoT devices are particularly vulnerable due to limited security features. The study likely proposes a hybrid approach combining multiple machine learning algorithms to enhance the accuracy and efficiency of detecting these attacks. The model aims to identify suspicious behavior in IoT devices, preventing large-scale botnet attacks and improving overall security in IoT ecosystems. The use of hybrid models usually means leveraging different techniques to optimize detection accuracy and reduce false positives.";
+
+      const aboutTextElement = document.getElementById('about-text');
+      typeWriterEffect(aboutTextElement, aboutText, 20);
+
+      const zoomText = document.getElementById('zoomText');
+      const aboutSection = document.getElementById('about');
+
+      window.addEventListener('scroll', () => {
+         const scrollY = window.scrollY;
+
+         const maxScale = 7;
+         const scaleValue = 1 + scrollY / 300;
+
+         if (scaleValue > maxScale) {
+            zoomText.style.transform = `translate(-50%, -50%) scale(${maxScale})`;
+         } else {
+            zoomText.style.transform = `translate(-50%, -50%) scale(${scaleValue})`;
+         }
+
+         if (scrollY > 1500) {
+            zoomText.style.opacity = 0;
+         } else {
+            zoomText.style.opacity = 1;
+         }
+
+         const raiseThreshold = 1200;
+         if (scrollY > raiseThreshold) {
+            const raiseValue = (scrollY - raiseThreshold) / 2;
+            aboutSection.style.transform = `translate(-50%, -50%) translateY(-${raiseValue}px)`;
+         } else {
+            aboutSection.style.transform = `translate(-50%, -50%)`;
+         }
+      });
+   </script>
+   </body>
+</html>

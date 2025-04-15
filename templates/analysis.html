@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Algorithm Comparison - Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+    /* Custom scrollbar */
+     ::-webkit-scrollbar {
+        width: 5px; /* Width of the vertical scrollbar */
+     }
+
+     ::-webkit-scrollbar-track {
+        background-color: #121212; /* Dark background for the track */
+     }
+
+     ::-webkit-scrollbar-thumb {
+        background-color: #1e90ff; /* Blue color for the thumb (the part that moves) */
+     }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Rajdhani', sans-serif;
+        color: white;
+        background: black;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+
+        /* Video Background */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+        .video-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(30%) blur(8px);
+        }
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+    /* Header */
+    header {
+        width: 100%;
+        padding: 20px 50px;
+        position: absolute;
+        top: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    header div a {
+        color: white;
+        font-size: 26px;
+        text-decoration: none;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    nav ul {
+        list-style: none;
+        display: flex;
+    }
+
+    nav ul li {
+        margin-left: 25px;
+    }
+
+    nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        padding: 10px 15px;
+        transition: 0.3s ease-in-out;
+    }
+
+    nav ul li a:hover {
+        color: #1e90ff;
+        text-shadow: 0 0 15px #1e90ff, 0 0 25px #1e90ff;
+        font-weight: bold;
+    }
+
+    /* Analysis Section */
+    .analysis-section {
+        width: 90%;
+        max-width: 1500px;
+        padding: 80px 45px;
+        background: rgba(0, 0, 0, 0.85);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        text-align: center;
+        margin: 130px auto;
+    }
+
+    .analysis-section h2 {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 40px;
+        color: white;
+    }
+
+    .blue-underline {
+        border-bottom: 4px solid #1e90ff;
+        padding-bottom: 10px;
+    }
+
+    /* Comparison Table */
+    .comparison-table {
+        width: 100%;
+        margin-top: 40px;
+        border-radius: 20px;
+        overflow: hidden;
+        table-layout: fixed;
+        border: 2px solid #1e90ff;
+        box-shadow: 0 0 0 1px #1e90ff inset;
+    }
+
+    .comparison-table th, .comparison-table td {
+        padding: 25px;
+        text-align: center;
+        border: 1px solid #1e90ff;
+        overflow: hidden;
+        word-wrap: break-word;
+    }
+
+    .comparison-table th {
+        background-color: #1e90ff;
+        color: white;
+        font-weight: bold;
+        font-size: 28px;
+    }
+
+    .comparison-table td {
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        font-size: 18px;
+    }
+
+    .category-level {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .low {
+        color: #e74c3c; /* Red for Low */
+    }
+
+    .medium {
+        color: #f39c12; /* Orange for Medium */
+    }
+
+    .high {
+        color: #27ae60; /* Green for High */
+    }
+
+    .category-icon {
+        font-size: 30px;
+    }
+
+    /* Progress Bar styles */
+    .progress-bar {
+        width: 100%;
+        height: 20px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        margin: 10px 0;
+        overflow: hidden;
+    }
+
+    .progress-bar span {
+        display: block;
+        height: 100%;
+        background: #1e90ff;
+        width: 0%;
+        border-radius: 10px;
+        animation: fillBar 2s forwards;
+    }
+
+    @keyframes fillBar {
+        0% {
+            width: 0%;
+        }
+        100% {
+            width: var(--progress-value);
+        }
+    }
+
+    .progress-bar-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .progress-bar-container .progress-bar {
+        width: 100%;
+    }
+    /* Image zoom style */
+    .zoom-image {
+        width: 100%;
+        height: auto;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+        border-radius: 10px;
+    }
+
+    .zoom-image:hover {
+        transform: scale(1.5);
+        z-index: 10;
+    }
+
+    .loader {
+      width: 96px;
+      height: 48px;
+      display: inline-block;
+      position: relative;
+      background: #FFF;
+      border-radius: 48px 48px 0 0;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .loader::after {
+      content: '';
+      box-sizing: border-box;
+      position: absolute;
+      width: 24px;
+      height: 12px;
+      border-radius: 24px 24px 0 0;
+      background: #1e90ff;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+    }
+    .loader::before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 32px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      bottom: 0;
+      background: #1e90ff;
+      transform-origin: 50% 100%;
+      box-sizing: border-box;
+      animation: animloader 2s linear infinite alternate;
+    }
+
+    @keyframes animloader {
+      0% {
+        transform: rotate(-70deg);
+      }
+      10% {
+        transform: rotate(-40deg);
+      }
+      20%, 45%, 35% {
+        transform: rotate(-10deg);
+      }
+      40%, 30% {
+        transform: rotate(-30deg);
+      }
+      50%, 60% {
+        transform: rotate(20deg);
+      }
+      55%, 65%, 75% {
+        transform: rotate(40deg);
+      }
+      70% {
+        transform: rotate(45deg);
+      }
+      85%, 90% {
+        transform: rotate(50deg);
+      }
+      95% {
+        transform: rotate(75deg);
+      }
+      100%, 93% {
+        transform: rotate(70deg);
+      }
+    }
+
+    /* Style for the loader container */
+    .loader-container {
+        display: flex;
+        align-items: flex-start; /* Ensure items are aligned at the top */
+        margin-top: 20px; /* Space between the table and the loader+content */
+        width: 100%; /* Ensure the container fills the width */
+    }
+
+    /* The loader1 custom style */
+    .loader1 {
+        width: 220px;
+        height: 280px;
+        background: #fff;
+        border-radius: 4px;
+        position: relative;
+        margin-left: 60px; /* Move loader to the right */
+        flex-shrink: 0; /* Prevent the loader from shrinking */
+    }
+
+    /* The before pseudo-element for loader1 */
+    .loader1:before {
+        content: '';
+        position: absolute;
+        width: 54px;
+        height: 25px;
+        left: 50%;
+        top: 0;
+        background-image: radial-gradient(ellipse at center, #0000 24%, #1e90ff 25%, #1e90ff 64%, #0000 65%),
+                          linear-gradient(to bottom, #0000 34%, #1e90ff 35%);
+        background-size: 12px 12px, 100% auto;
+        background-repeat: no-repeat;
+        background-position: center top;
+        transform: translate(-50%, -65%);
+        box-shadow: 0 -3px rgba(0, 0, 0, 0.25) inset;
+    }
+
+    /* The after pseudo-element for loader1 (animated part) */
+    .loader1:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 20%;
+        transform: translateX(-50%);
+        width: 66%;
+        height: 60%;
+        background: linear-gradient(to bottom, #1e90ff 30%, #0000 31%);
+        background-size: 100% 16px;
+        animation: writeDown 2s ease-out infinite;
+    }
+
+    /* Animation for the loader */
+    @keyframes writeDown {
+        0% { height: 0%; opacity: 0; }
+        20% { height: 0%; opacity: 1; }
+        80% { height: 65%; opacity: 1; }
+        100% { height: 65%; opacity: 0; }
+    }
+
+    .content-container {
+        display: flex;
+        flex-direction: column; /* Stack the heading and paragraph vertically */
+        padding-left: 30px; /* Space between loader and content */
+        width: 100%; /* Make sure the content takes up full width */
+    }
+
+    /* Style for the heading */
+    .heading {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-align: center; /* Ensure the heading remains centered */
+    }
+
+    .para {
+        font-size: 19px;
+        width: 950px; /* Adjust width as per requirement */
+        overflow: hidden;
+        white-space: normal; /* Allow wrapping after typing */
+        display: block; /* Make sure paragraph behaves like a block element */
+        text-align: justify; /* Justify the text */
+    }
+
+    .cursor {
+        display: inline-block;
+        width: 3px; /* Cursor width */
+        height: 1.2em; /* Height of the cursor (adjust as needed) */
+        background-color: #3498db; /* Cursor color */
+        animation: blink 0.75s step-end infinite;
+    }
+
+    @keyframes blink {
+        50% {
+            background-color: transparent;
+        }
+    }
+
+</style>
+
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div><a href="{{ url_for('analysis') }}">Hi {{ user_name }}</a></div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('viewdata') }}">View Data</a></li>
+                <li><a href="{{ url_for('algo') }}">Algorithm</a></li>
+                <li><a href="{{ url_for('analysis') }}" class="active">Analysis</a></li>
+                <li><a href="{{ url_for('prediction') }}">Prediction</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Video Background -->
+    <div class="video-container">
+        <video class="video-bg" autoplay loop muted>
+            <source src="{{ url_for('static', filename='videos/home_background.mp4') }}" type="video/mp4">
+        </video>
+    </div>
+    <div class="video-overlay"></div>
+
+    <!-- Analysis Section -->
+    <div class="analysis-section">
+        <h2 class="blue-underline">Comparison of ANN, RNN, and LSTM <span class="loader"></span></h2>
+
+        <!-- Comparison Table -->
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>ANN</th>
+                    <th>RNN</th>
+                    <th>LSTM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Accuracy<span class="category-icon">🎯</span></td>
+                    <td>
+                        <div class="progress-bar">
+                            <span style="--progress-value: {{ ann_res['accuracy'] }}%"></span>
+                        </div>
+                        <div class="circle">{{ ann_res['accuracy'] }}%</div>
+                    </td>
+                    <td>
+                        <div class="progress-bar">
+                            <span style="--progress-value: {{ rnn_res['accuracy'] }}%"></span>
+                        </div>
+                        <div class="circle">{{ rnn_res['accuracy'] }}%</div>
+                    </td>
+                    <td>
+                        <div class="progress-bar">
+                            <span style="--progress-value: {{ lstm_res['accuracy'] }}%"></span>
+                        </div>
+                        <div class="circle">{{ lstm_res['accuracy'] }}%</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Macro Avg. Precision<span class="category-icon">📏</span></td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ ann_res['macro_avg_precision']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ ann_res['macro_avg_precision'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ rnn_res['macro_avg_precision']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ rnn_res['macro_avg_precision'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ lstm_res['macro_avg_precision']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ lstm_res['macro_avg_precision'] }}</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Macro Avg. Recall<span class="category-icon">🔄</span></td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ ann_res['macro_avg_recall']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ ann_res['macro_avg_recall'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ rnn_res['macro_avg_recall']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ rnn_res['macro_avg_recall'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ lstm_res['macro_avg_recall']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ lstm_res['macro_avg_recall'] }}</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Macro Avg. F1-Score<span class="category-icon">🌟</span></td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ ann_res['macro_avg_f1']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ ann_res['macro_avg_f1'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ rnn_res['macro_avg_f1']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ rnn_res['macro_avg_f1'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ lstm_res['macro_avg_f1']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ lstm_res['macro_avg_f1'] }}</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Weighted Avg. Precision<span class="category-icon">📏</span></td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ ann_res['weighted_avg_precision']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ ann_res['weighted_avg_precision'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ rnn_res['weighted_avg_precision']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ rnn_res['weighted_avg_precision'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ lstm_res['weighted_avg_precision']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ lstm_res['weighted_avg_precision'] }}</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Weighted Avg. Recall<span class="category-icon">🔄</span></td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ ann_res['weighted_avg_recall']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ ann_res['weighted_avg_recall'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ rnn_res['weighted_avg_recall']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ rnn_res['weighted_avg_recall'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ lstm_res['weighted_avg_recall']*100 }}%"></span>
+                            </div>
+                            <div class="circle">{{ lstm_res['weighted_avg_recall'] }}</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Weighted Avg. F1-Score<span class="category-icon">🌟</span></td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ (ann_res['weighted_avg_f1'] * 100) }}%"></span>
+                            </div>
+                            <div class="circle">{{ ann_res['weighted_avg_f1'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ (rnn_res['weighted_avg_f1'] * 100) }}%"></span>
+                            </div>
+                            <div class="circle">{{ rnn_res['weighted_avg_f1'] }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <span style="--progress-value: {{ (lstm_res['weighted_avg_f1'] * 100) }}%"></span>
+                            </div>
+                            <div class="circle">{{ lstm_res['weighted_avg_f1'] }}</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Training Time<span class="category-icon">⏳</span></td>
+                    <td><div class="category-level medium">Medium</div></td>
+                    <td><div class="category-level medium">Medium</div></td>
+                    <td><div class="category-level high">High</div></td>
+                </tr>
+                <tr>
+                    <td>Class Imbalance Handling<span class="category-icon">⚖️</span></td>
+                    <td><div class="category-level low">Poor</div></td>
+                    <td><div class="category-level low">Poor</div></td>
+                    <td><div class="category-level high">Good</div></td>
+                </tr>
+                <tr>
+                    <td>Overfitting Risk<span class="category-icon">⚠️</span></td>
+                    <td><div class="category-level medium">Moderate</div></td>
+                    <td><div class="category-level low">Higher</div></td>
+                    <td><div class="category-level high">Lower</div></td>
+                </tr>
+                <tr>
+                    <td>Interpretability<span class="category-icon">🔍</span></td>
+                    <td><div class="category-level low">Easier</div></td>
+                    <td><div class="category-level medium">Moderate</div></td>
+                    <td><div class="category-level high">Hard</div></td>
+                </tr>
+                <tr>
+                    <td>Suitability for Time-Series<span class="category-icon">📊</span></td>
+                    <td><div class="category-level low">Low</div></td>
+                    <td><div class="category-level medium">Moderate</div></td>
+                    <td><div class="category-level high">High</div></td>
+                </tr>
+                <tr>
+                    <td>Computation Resources<span class="category-icon">💻</span></td>
+                    <td><div class="category-level high">Low</div></td>
+                    <td><div class="category-level medium">Medium</div></td>
+                    <td><div class="category-level low">High</div></td>
+                </tr>
+                <tr>
+                    <td>Confusion Matrix<span class="category-icon">📈</span></td>
+                    <td><img src="{{ url_for('static', filename='images/cmat_ann.jpg') }}" alt="ANN Confusion Matrix" class="zoom-image"></td>
+                    <td><img src="{{ url_for('static', filename='images/cmat_rnn.jpg') }}" alt="RNN Confusion Matrix" class="zoom-image"></td>
+                    <td><img src="{{ url_for('static', filename='images/cmat_lstm.jpg') }}" alt="LSTM Confusion Matrix" class="zoom-image"></td>
+                </tr>
+                <tr>
+                    <td>Receiver Operating Characteristics<span class="category-icon">📉</span></td>
+                    <td><img src="{{ url_for('static', filename='images/roc_ann.jpg') }}" alt="ANN Confusion Matrix" class="zoom-image"></td>
+                    <td><img src="{{ url_for('static', filename='images/roc_rnn.jpg') }}" alt="RNN Confusion Matrix" class="zoom-image"></td>
+                    <td><img src="{{ url_for('static', filename='images/roc_lstm.jpg') }}" alt="LSTM Confusion Matrix" class="zoom-image"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br><br>
+        <div class="loader-container">
+            <div class="loader1"></div>
+            <div class="content-container">
+                <h2 class="heading; blue-underline">Analysis</h2>
+                <p id="typed-text" class="para"></p>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const progressBars = document.querySelectorAll('.progress-bar span');
+        progressBars.forEach(bar => {
+            const progressValue = bar.style.getPropertyValue('--progress-value');
+            bar.style.width = progressValue;
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const text = "{{ analysis_message }}";
+        const container = document.getElementById('typed-text');
+        const cursor = document.createElement('span');
+        cursor.classList.add('cursor');
+        container.appendChild(cursor);
+
+        const typingSpeed = 25;
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                container.innerHTML = text.substring(0, i);
+                container.appendChild(cursor);
+                i++;
+                setTimeout(typeWriter, typingSpeed);
+            }
+        }
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Start typing when the paragraph becomes visible
+                    typeWriter();
+                    observer.disconnect(); // Stop observing after the typing starts
+                }
+            });
+        }, { threshold: 0.1 }); // 10% visibility threshold
+
+        // Start observing the paragraph element
+        observer.observe(container);
+    });
+
+
+</script>
+
+</html>

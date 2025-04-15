@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Botnet Attacks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Custom scrollbar */
+         ::-webkit-scrollbar {
+            width: 5px; /* Width of the vertical scrollbar */
+         }
+
+         ::-webkit-scrollbar-track {
+            background-color: #121212; /* Dark background for the track */
+         }
+
+         ::-webkit-scrollbar-thumb {
+            background-color: #1e90ff; /* Blue color for the thumb (the part that moves) */
+         }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #000;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        /* Full-Screen Video Background */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .video-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(30%) blur(8px);
+        }
+
+        .video-overlay {
+            position: fixed;
+            top: -20%; /* Increased top position for more overlay */
+            left: -20%; /* Increased left position for wider coverage */
+            width: 140%; /* Increased width for larger overlay */
+            height: 140%; /* Increased height for larger overlay */
+            background: rgba(0, 0, 0, 1); /* Increased dim effect */
+            z-index: -1;
+        }
+
+        /* Header and Navigation */
+        header {
+            width: 100%;
+            padding: 20px 50px;
+            position: absolute;
+            top: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        header div a {
+            color: white;
+            font-size: 26px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: 0.3s ease-in-out;
+            position: relative;
+        }
+
+        /* Dark Blue Glow Effect on Hover */
+        nav ul li a:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 10px #1e90ff, 0 0 20px #1e90ff;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+
+            nav ul {
+                padding-top: 10px;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav ul li {
+                margin: 8px 0;
+            }
+        }
+
+        /* FAQ Section Styling */
+        .faq-section {
+            width: 90%;
+            max-width: 1000px;
+            margin: 120px auto;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 60px 80px;
+            border-radius: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 60px rgba(255, 255, 255, 0.1), 0 0 90px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Title Styling */
+        .faq-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        .blue-underline {
+            border-bottom: 4px solid #1e90ff; /* Blue underline */
+            padding-bottom: 10px;  /* Add some space under the heading */
+            width: 50%; /* Set the width to a percentage or a fixed value */
+            margin: 0 auto;
+        }
+
+        /* FAQ Item Styling */
+        .faq-item {
+            margin-bottom: 10px; /* Increased margin for spacing between questions */
+            padding: 20px; /* Increased padding for more space around the question */
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: white; /* Text color */
+            width: 100%;
+            max-width: 800px; /* Limit max-width to match the container */
+            border-radius: 5px;
+        }
+
+        /* FAQ Question Text */
+        .faq-item h3 {
+            font-size: 20px; /* Restored the font size to 20px */
+            margin-right: 10px;
+            flex: 1; /* Allow the question to grow and take up space */
+        }
+
+        /* Arrow Styling */
+        .arrow-down {
+            transition: transform 0.3s ease;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* FAQ Answer Styling */
+        .faq-answer {
+            display: none; /* Hidden by default */
+            padding: 15px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 17px;
+            width: 90%; /* Ensure full width beneath the question */
+            color: #1e90ff;
+            border-radius: 5px; /* Match the border radius of the question block */
+        }
+
+        /* Rotate arrow when active */
+        .faq-item.active .arrow-down {
+            transform: rotate(180deg);
+        }
+
+        /* Adjustments for smaller screens */
+        @media (max-width: 480px) {
+            .faq-title {
+                font-size: 24px;
+            }
+
+            .faq-item h3 {
+                font-size: 18px;
+            }
+
+            .arrow-down {
+                font-size: 16px;
+            }
+        }
+
+/* Submit a Question Form Styling */
+.submit-question {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 30px;
+    text-align: center;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.08); /* Subtle dark background */
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(30, 144, 255, 0.3); /* Blue neon glow */
+    transition: 0.3s ease-in-out;
+}
+
+.submit-question:hover {
+    box-shadow: 0 0 25px rgba(30, 144, 255, 0.5);
+}
+
+.submit-question h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #1e90ff; /* Bright blue for contrast */
+    text-transform: uppercase;
+    text-shadow: 0 0 5px rgba(30, 144, 255, 0.8);
+}
+
+/* Input Fields */
+.submit-question input,
+.submit-question textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid rgba(30, 144, 255, 0.6); /* Glowing border */
+    background: rgba(0, 0, 0, 0.8); /* Dark background */
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* Input Field Focus Effect */
+.submit-question input:focus,
+.submit-question textarea:focus {
+    border-color: #1e90ff;
+    box-shadow: 0 0 10px rgba(30, 144, 255, 0.8);
+}
+
+/* Textarea Customization */
+.submit-question textarea {
+    height: 120px;
+    resize: none;
+}
+
+/* Submit Button */
+.submit-question button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, #1e90ff, #0073e6);
+    color: white;
+    border: none;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+}
+
+.submit-question button:hover {
+    background: linear-gradient(45deg, #0073e6, #1e90ff);
+    box-shadow: 0 0 15px rgba(30, 144, 255, 0.8);
+}
+
+/* Confirmation Message */
+#confirmationMessage {
+    display: none;
+    color: #1e90ff;
+    margin-top: 10px;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(30, 144, 255, 0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .submit-question {
+        padding: 20px;
+    }
+
+    .submit-question h3 {
+        font-size: 20px;
+    }
+
+    .submit-question input,
+    .submit-question textarea {
+        font-size: 14px;
+    }
+
+    .submit-question button {
+        font-size: 16px;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div><a href="{{ url_for('index') }}">BOTNET ATTACKS</a></div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">HOME</a></li>
+                <li><a href="{{ url_for('about') }}">ABOUT</a></li>
+                <li><a href="{{ url_for('login') }}">Get Started</a></li>
+                <li><a href="{{ url_for('support') }}">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Full-Screen Video -->
+    <div class="video-container">
+        <video class="video-bg" autoplay loop muted>
+            <source src="{{ url_for('static', filename='videos/home_background.mp4') }}" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+        <div class="faq-title blue-underline">Frequently Asked Questions</div><br>
+
+            <div class="faq-item" onclick="toggleAnswer(1)">
+                <h3>What is this website about?</h3>
+                <span class="arrow-down" id="arrow-1">▼</span>
+            </div>
+            <div class="faq-answer" id="answer-1">
+                Our website provides a platform for detecting botnet attacks using a hybrid model that combines ANN, RNN, and LSTM. Users can upload datasets, use existing data, or even connect their IoT environments for live data to predict and prevent potential botnet attacks.
+            </div>
+
+            <div class="faq-item" onclick="toggleAnswer(2)">
+                <h3>How does the botnet attack detection work?</h3>
+                <span class="arrow-down" id="arrow-2">▼</span>
+            </div>
+            <div class="faq-answer" id="answer-2">
+                We analyze patterns in your data using our hybrid model, which then predicts potential botnet attacks. Based on the accuracy of your data, our system suggests the best model for detection—ANN, RNN, or LSTM.
+            </div>
+
+
+            <div class="faq-item" onclick="toggleAnswer(3)">
+                <h3>Do I need to register to use the site?</h3>
+                <span class="arrow-down" id="arrow-3">▼</span>
+            </div>
+            <div class="faq-answer" id="answer-3">
+                Yes, to access the full features of our platform, such as uploading datasets or connecting IoT environments, you need to create an account.
+            </div>
+
+            <div class="faq-item" onclick="toggleAnswer(4)">
+                <h3>How can I create an account?</h3>
+                <span class="arrow-down" id="arrow-4">▼</span>
+            </div>
+            <div class="faq-answer" id="answer-4">
+                You can create an account easily by visiting the "Get Started" section. After providing your email, you'll receive an OTP for email verification to activate your account.
+            </div>
+
+            <div class="faq-item" onclick="toggleAnswer(5)">
+                <h3>How do I log in if I already have an account?</h3>
+                <span class="arrow-down" id="arrow-5">▼</span>
+            </div>
+            <div class="faq-answer" id="answer-5">
+                If you're an existing user, go to the "Get Started" section, click on the login page, and enter your credentials to access your account.
+            </div>
+
+            <div class="faq-item" onclick="toggleAnswer(6)">
+                <h3>How do I choose the best model for detecting botnet attacks?</h3>
+                <span class="arrow-down" id="arrow-6">▼</span>
+            </div>
+            <div class="faq-answer" id="answer-6">
+                Our platform automatically recommends the most suitable model (ANN, RNN, or LSTM) based on the accuracy score of your dataset. You can also manually select a model depending on your preference.
+            </div>
+
+            <div class="faq-item" onclick="toggleAnswer(7)">
+                <h3>Can I use the service without uploading my own data?</h3>
+                <span class="arrow-down" id="arrow-7">▼</span>
+            </div>
+            <div class="faq-answer" id="answer-7">
+                Yes, you can use existing datasets provided on the platform or even gather live data by connecting your IoT environment to the system.
+            </div>
+
+            <div class="faq-item" onclick="toggleAnswer(8)">
+                <h3>Can I integrate live data from my IoT environment?</h3>
+                <span class="arrow-down" id="arrow-8">▼</span>
+            </div>
+            <div class="faq-answer" id="answer-8">
+                Yes, our platform allows you to integrate live data from your IoT environment. Instructions for API integration can be found in the "Get Started" section.
+            </div>
+
+            <div class="faq-item" onclick="toggleAnswer(9)">
+                <h3>What if I didn’t receive the OTP for email verification?</h3>
+                <span class="arrow-down" id="arrow-9">▼</span>
+            </div>
+            <div class="faq-answer" id="answer-9">
+                Please check your spam/junk folder. If you still haven't received the OTP, you can request a new one. If the problem persists, contact our support team for assistance.
+            </div>
+
+            <div class="faq-item" onclick="toggleAnswer(10)">
+                <h3>How do I contact customer support if I have an issue?</h3>
+                <span class="arrow-down" id="arrow-10">▼</span>
+            </div>
+            <div class="faq-answer" id="answer-10">
+                You can reach out to customer support by visiting the "Support" section of the website, or email us directly at thecodexcipher@gmail.com for further assistance.
+            </div>
+
+            <!-- Submit a Question Form -->
+            <div class="submit-question">
+                <h3 style=" color:white;">Need Assistance?</h3>
+                <form id="questionForm">
+                    <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    <input type="email" id="email" name="email" placeholder="Your Email" required>
+                    <textarea id="question" name="question" placeholder="What’s on Your Mind..." required></textarea>
+                    <button type="submit">Reach Out</button>
+                </form>
+                <p id="confirmationMessage" style="display: none; color: #1e90ff; margin-top: 10px;">
+                    Thanks for reaching out! We’ll get back to you shortly.
+                </p>
+            </div>
+    </div>
+
+    <!--Chatbot html      <>-->
+    {% include 'chatbot.html' %}
+
+    <!--footer html      <>-->
+    {% include 'footer.html' %}
+
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById('answer-' + id);
+            const arrow = document.getElementById('arrow-' + id);
+            if (answer.style.display === 'none' || answer.style.display === '') {
+                answer.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                answer.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        document.getElementById("questionForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            let formData = new FormData(this);
+            let response = await fetch("/submit-question", {
+                method: "POST",
+                body: formData
+            });
+            if (response.ok) {
+                document.getElementById("confirmationMessage").style.display = "block";
+                setTimeout(() => {
+                    document.getElementById("questionForm").reset();
+                    document.getElementById("confirmationMessage").style.display = "none";
+                }, 3000);
+            } else {
+                alert("Error submitting question. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
+            background: #111;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .verify-container {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            width: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h3 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .verify-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .verify-container input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .verify-container input:focus {
+            border-color: #1e90ff;
+            box-shadow: 0 0 10px #1e90ff;
+        }
+
+        .verify-container button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            background: linear-gradient(45deg, #1e90ff, #1478d4);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .verify-container button:hover {
+            background: linear-gradient(45deg, #1478d4, #1e90ff);
+            box-shadow: 0 0 15px rgba(30, 144, 255, 0.8);
+        }
+
+        /* Modal Style */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 37%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
+            width: 80%;
+            max-width: 400px;
+            z-index: 9999;
+            text-align: center;
+            animation: modalFadeIn 0.5s forwards;
+        }
+
+        .modal.success {
+            background-color: #1e90ff;
+            border-left: 4px solid #1478d4;
+        }
+
+        .modal.error {
+            background-color: #f44336;
+            border-left: 4px solid #d32f2f;
+        }
+
+        @keyframes modalFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal button {
+            margin-top: 20px;
+            background: #1e90ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .modal button:hover {
+            background: #1478d4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="verify-container">
+        <h3>Email Verification</h3>
+        <p>Please enter the OTP sent to your email:</p>
+
+        <form action="{{ url_for('verify') }}" method="POST">
+            <input type="text" name="otp" placeholder="Enter OTP" required>
+            <button type="submit">Verify OTP</button>
+        </form>
+
+        <p>If you haven't received the OTP, please check your email or <a href="{{ url_for('registration') }}" style="color: #1e90ff;">try again</a>.</p>
+    </div>
+
+    {% if message %}
+        <div class="modal {% if success %}success{% else %}error{% endif %}">
+            <p>{{ message }}</p>
+            <button onclick="closeModal();">Close</button>
+        </div>
+
+        <script>
+            function closeModal() {
+                var modal = document.querySelector('.modal');
+                modal.style.display = 'none'; // Close the modal
+                {% if success %}
+                    window.location.href = "{{ url_for('login') }}";  // Redirect to the login page after close
+                {% endif %}
+            }
+
+            // Show the modal
+            document.querySelector('.modal').style.display = 'block';
+        </script>
+    {% endif %}
+
+</body>
+</html>
