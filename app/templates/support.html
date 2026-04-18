@@ -329,13 +329,13 @@
 
     <!-- Header -->
     <header>
-        <div><a href="{{ url_for('index') }}">BOTNET ATTACKS</a></div>
+        <div><a href="{{ url_for('general.index') }}">BOTNET ATTACKS</a></div>
         <nav>
             <ul>
-                <li><a href="{{ url_for('index') }}">HOME</a></li>
-                <li><a href="{{ url_for('about') }}">ABOUT</a></li>
-                <li><a href="{{ url_for('login') }}">Get Started</a></li>
-                <li><a href="{{ url_for('support') }}">Support</a></li>
+                <li><a href="{{ url_for('general.index') }}">HOME</a></li>
+                <li><a href="{{ url_for('general.about') }}">ABOUT</a></li>
+                <li><a href="{{ url_for('auth.login') }}">Get Started</a></li>
+                <li><a href="{{ url_for('general.support') }}">Support</a></li>
             </ul>
         </nav>
     </header>
@@ -437,6 +437,7 @@
             <div class="submit-question">
                 <h3 style=" color:white;">Need Assistance?</h3>
                 <form id="questionForm">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="text" id="name" name="name" placeholder="Your Name" required>
                     <input type="email" id="email" name="email" placeholder="Your Email" required>
                     <textarea id="question" name="question" placeholder="What’s on Your Mind..." required></textarea>

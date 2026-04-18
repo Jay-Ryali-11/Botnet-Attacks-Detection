@@ -410,14 +410,14 @@
 <body>
     <!-- Header -->
     <header>
-        <div><a href="{{ url_for('analysis') }}">Hi {{ user_name }}</a></div>
+        <div><a href="{{ url_for('ml.analysis') }}">Hi {{ user_name }}</a></div>
         <nav>
             <ul>
-                <li><a href="{{ url_for('viewdata') }}">View Data</a></li>
-                <li><a href="{{ url_for('algo') }}">Algorithm</a></li>
-                <li><a href="{{ url_for('analysis') }}" class="active">Analysis</a></li>
-                <li><a href="{{ url_for('prediction') }}">Prediction</a></li>
-                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('ml.viewdata') }}">View Data</a></li>
+                <li><a href="{{ url_for('ml.algo') }}">Algorithm</a></li>
+                <li><a href="{{ url_for('ml.analysis') }}" class="active">Analysis</a></li>
+                <li><a href="{{ url_for('ml.prediction') }}">Prediction</a></li>
+                <li><a href="{{ url_for('general.profile') }}">Profile</a></li>
             </ul>
         </nav>
     </header>

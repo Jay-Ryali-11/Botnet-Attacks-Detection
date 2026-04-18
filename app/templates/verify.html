@@ -145,12 +145,13 @@
         <h3>Email Verification</h3>
         <p>Please enter the OTP sent to your email:</p>
 
-        <form action="{{ url_for('verify') }}" method="POST">
+        <form action="{{ url_for('auth.verify') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="text" name="otp" placeholder="Enter OTP" required>
             <button type="submit">Verify OTP</button>
         </form>
 
-        <p>If you haven't received the OTP, please check your email or <a href="{{ url_for('registration') }}" style="color: #1e90ff;">try again</a>.</p>
+        <p>If you haven't received the OTP, please check your email or <a href="{{ url_for('auth.registration') }}" style="color: #1e90ff;">try again</a>.</p>
     </div>
 
     {% if message %}
@@ -160,14 +161,15 @@
         </div>
 
         <script>
+            const redirectUrl = "{{ url_for('auth.login') if success else '' }}";
             function closeModal() {
                 var modal = document.querySelector('.modal');
-                modal.style.display = 'none'; // Close the modal
-                {% if success %}
-                    window.location.href = "{{ url_for('login') }}";  // Redirect to the login page after close
-                {% endif %}
+                modal.style.display = 'none';
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
             }
-
+            
             // Show the modal
             document.querySelector('.modal').style.display = 'block';
         </script>

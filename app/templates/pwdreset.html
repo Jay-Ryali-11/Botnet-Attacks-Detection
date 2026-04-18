@@ -132,12 +132,13 @@
     <div class="reset-container">
         <h3 class="blue-underline">Password Reset</h3><br>
         <p>Please enter the OTP sent to your email and your new password</p><br>
-        <form method="POST" action="{{ url_for('reset') }}">
+        <form method="POST" action="{{ url_for('auth.reset') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="text" name="otp" placeholder="Enter OTP" required>
             <input type="password" name="new_password" placeholder="Enter New Password" required>
             <button type="submit">Reset Password</button>
         </form>
-        <p>If you haven't received the OTP, please check your email or <a href="{{ url_for('login') }}" style="color: #1e90ff;">try again</a>.</p>
+        <p>If you haven't received the OTP, please check your email or <a href="{{ url_for('auth.login') }}" style="color: #1e90ff;">try again</a>.</p>
     </div>
 
     <!-- Custom Alert Box -->
@@ -162,17 +163,18 @@
                 }, 3000);
             }
 
+            const redirectUrl = "{{ url_for('auth.login') if success else '' }}";
+
             function closeAlert() {
                 let alertBox = document.getElementById("customAlert");
                 alertBox.style.opacity = "0";
                 setTimeout(() => {
                     alertBox.style.display = "none";
-                    {% if success %}
-                        window.location.href = "{{ url_for('login') }}";
-                    {% endif %}
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    }
                 }, 500);
             }
-
             showCustomAlert();
         </script>
     {% endif %}

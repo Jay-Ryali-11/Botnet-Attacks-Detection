@@ -251,14 +251,14 @@
 
     <!-- Header -->
     <header>
-        <div><a href="{{ url_for('prediction') }}">Hi {{ user_name }}</a></div>
+        <div><a href="{{ url_for('ml.prediction') }}">Hi {{ user_name }}</a></div>
         <nav>
             <ul>
-                <li><a href="{{ url_for('viewdata') }}">View Data</a></li>
-                <li><a href="{{ url_for('algo') }}">Algorithm</a></li>
-                <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
-                <li class="active"><a href="{{ url_for('prediction') }}">Prediction</a></li>
-                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('ml.viewdata') }}">View Data</a></li>
+                <li><a href="{{ url_for('ml.algo') }}">Algorithm</a></li>
+                <li><a href="{{ url_for('ml.analysis') }}">Analysis</a></li>
+                <li class="active"><a href="{{ url_for('ml.prediction') }}">Prediction</a></li>
+                <li><a href="{{ url_for('general.profile') }}">Profile</a></li>
             </ul>
         </nav>
     </header>
@@ -275,7 +275,8 @@
         <div class="heading-container">
             <h2 class="heading-text">Prediction</h2>
 
-            <form method="POST" action="{{ url_for('prediction') }}" onsubmit="return validateForm()">
+            <form method="POST" action="{{ url_for('ml.prediction') }}" onsubmit="return validateForm()">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group" data-tooltip="Select the algorithm to use for prediction.">
                 <select id="algorithm" name="algorithm" class="custom-select" required>
                     <option value="">Select an Algorithm</option>

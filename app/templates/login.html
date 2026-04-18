@@ -241,13 +241,13 @@
     <!-- Header -->
     {% block a %}
     <header>
-        <div><a href="{{url_for('index')}}">BOTNET ATTACKS</a></div>
+        <div><a href="{{url_for('general.index')}}">BOTNET ATTACKS</a></div>
         <nav>
             <ul>
-                <li><a href="{{url_for('index')}}">HOME</a></li>
-                <li><a href="{{url_for('about')}}">ABOUT</a></li>
-                <li><a href="{{url_for('registration')}}">REGISTRATION</a></li>
-                <li><a href="{{ url_for('support') }}">Support</a></li>
+                <li><a href="{{url_for('general.index')}}">HOME</a></li>
+                <li><a href="{{url_for('general.about')}}">ABOUT</a></li>
+                <li><a href="{{url_for('auth.registration')}}">REGISTRATION</a></li>
+                <li><a href="{{ url_for('general.support') }}">Support</a></li>
             </ul>
         </nav>
     </header>
@@ -264,7 +264,8 @@
     <!-- Login form -->
     <div class="form-container">
         <h3 class="blue-underline">Login</h3>
-        <form id="loginForm" action="{{url_for('login')}}" method="post">
+        <form id="loginForm" action="{{url_for('auth.login')}}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="email" name="email" id="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
             <p>Forgot Password?
@@ -272,7 +273,7 @@
             </p>
             <button type="submit">Login</button>
         </form>
-        <p style="color: white; margin-top: 20px;">Don't have an account? <a href="{{url_for('registration')}}" style="color: #1e90ff; text-decoration: none; font-weight: bold;">Create One</a></p>
+        <p style="color: white; margin-top: 20px;">Don't have an account? <a href="{{url_for('auth.registration')}}" style="color: #1e90ff; text-decoration: none; font-weight: bold;">Create One</a></p>
     </div><br><br><br><br><br><br><br><br>
 
     <!-- Custom alert box -->
@@ -336,14 +337,14 @@
 
             // Make an AJAX request to check if the email exists
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '{{ url_for("check_email") }}', true);
+            xhr.open('POST', '{{ url_for("auth.check_email") }}', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.status === 'success') {
                         setTimeout(function() {
-                            window.location.href = "{{ url_for('reset') }}?email=" + encodeURIComponent(email);
+                            window.location.href = "{{ url_for('auth.reset') }}?email=" + encodeURIComponent(email);
                         }, 2000);  // Delay before redirecting
                     } else {
                         showCustomAlert(response.message);
@@ -352,12 +353,17 @@
                     showCustomAlert('An error occurred while checking the email.');
                 }
             };
-            xhr.send('email=' + encodeURIComponent(email));  // Send email to backend
-        }
+            var csrfToken = document.querySelector('input[name="csrf_token"]').value;
+            var params = 'email=' + encodeURIComponent(email) + '&csrf_token=' + encodeURIComponent(csrfToken);
 
-        {% if msg %}
-            showCustomAlert("{{ msg }}");  // Show the alert with the passed message
-        {% endif %}
+            xhr.send(params);
+            event.preventDefault();
+        }
+        
+        const message = "{{ msg | default('') }}";
+        if (message) {
+            showCustomAlert(message);
+        }
     </script>
 </body>
 </html>

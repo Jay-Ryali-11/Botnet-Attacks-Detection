@@ -208,13 +208,13 @@
 
       <!-- Header -->
       <header>
-         <div><a href="{{url_for('index')}}">BOTNET ATTACKS</a></div>
+         <div><a href="{{url_for('general.index')}}">BOTNET ATTACKS</a></div>
          <nav>
             <ul>
-               <li><a href="{{url_for('index')}}">HOME</a></li>
-               <li><a href="{{url_for('about')}}">ABOUT</a></li>
-               <li><a href="{{ url_for('login') }}">Login</a></li>
-               <li><a href="{{ url_for('support') }}">Support</a></li>
+               <li><a href="{{url_for('general.index')}}">HOME</a></li>
+               <li><a href="{{url_for('general.about')}}">ABOUT</a></li>
+               <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+               <li><a href="{{ url_for('general.support') }}">Support</a></li>
             </ul>
          </nav>
       </header>
@@ -229,7 +229,8 @@
       <!-- Registration Form -->
       <div class="form-container">
           <h3 class="blue-underline">Registration</h3>
-          <form action="{{url_for('registration')}}" method="post">
+          <form action="{{url_for('auth.registration')}}" method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
               <input type="text" name="name" placeholder="Name" required>
               <input type="email" name="email" placeholder="Email" required>
               <input type="password" name="password" placeholder="Password" required>
@@ -240,7 +241,7 @@
           </form>
 
           <!-- Link to Login for Existing Users -->
-          <p style="color: white; margin-top: 20px;">Already have an account? <a href="{{url_for('login')}}" style="color: #1e90ff; text-decoration: none; font-weight: bold;">Login here</a></p>
+          <p style="color: white; margin-top: 20px;">Already have an account? <a href="{{url_for('auth.login')}}" style="color: #1e90ff; text-decoration: none; font-weight: bold;">Login here</a></p>
       </div>
 
       {% if msg %}

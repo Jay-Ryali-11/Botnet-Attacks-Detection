@@ -198,13 +198,13 @@
    <body>
       <!-- Header -->
       <header>
-         <div><a href="{{ url_for('index') }}">BOTNET ATTACKS</a></div>
+         <div><a href="{{ url_for('general.index') }}">BOTNET ATTACKS</a></div>
          <nav>
             <ul>
-               <li><a href="{{ url_for('index') }}">HOME</a></li>
-               <li><a href="{{ url_for('about') }}">ABOUT</a></li>
-               <li><a href="{{ url_for('login') }}">Get Started</a></li>
-               <li><a href="{{ url_for('support') }}">Support</a></li>
+               <li><a href="{{ url_for('general.index') }}">HOME</a></li>
+               <li><a href="{{ url_for('general.about') }}">ABOUT</a></li>
+               <li><a href="{{ url_for('auth.login') }}">Get Started</a></li>
+               <li><a href="{{ url_for('general.support') }}">Support</a></li>
             </ul>
          </nav>
       </header>

@@ -224,14 +224,14 @@
 
     <!-- Header -->
     <header>
-        <div><a href="{{ url_for('viewdata') }}">Hi {{ user_name }}</a></div>
+        <div><a href="{{ url_for('ml.viewdata') }}">Hi {{ user_name }}</a></div>
         <nav>
             <ul>
-                <li class="active"><a href="{{ url_for('viewdata') }}">View Data</a></li>
-                <li><a href="{{ url_for('algo') }}">Algorithm</a></li>
-                <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
-                <li><a href="{{ url_for('prediction') }}">Prediction</a></li>
-                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li class="active"><a href="{{ url_for('ml.viewdata') }}">View Data</a></li>
+                <li><a href="{{ url_for('ml.algo') }}">Algorithm</a></li>
+                <li><a href="{{ url_for('ml.analysis') }}">Analysis</a></li>
+                <li><a href="{{ url_for('ml.prediction') }}">Prediction</a></li>
+                <li><a href="{{ url_for('general.profile') }}">Profile</a></li>
             </ul>
         </nav>
     </header>
@@ -259,6 +259,7 @@
                 <div class="card">
                     <h3>Choose Dataset</h3>
                     <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="file" name="dataset" id="datasetInput" accept=".csv">
                         <button type="submit" class="view-data-btn">Upload Dataset</button>
                     </form>
@@ -267,6 +268,7 @@
                 <div class="card">
                     <h3>Choose Default Dataset</h3>
                     <form method="POST" id="defaultForm">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <select name="default_dataset" id="defaultDataset">
                             <option value="">No option selected</option>
                             {% for file in uploaded_files %}

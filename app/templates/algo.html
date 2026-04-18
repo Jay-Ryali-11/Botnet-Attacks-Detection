@@ -265,14 +265,14 @@
 <body>
     <!-- Header -->
     <header>
-        <div><a href="{{ url_for('algo') }}">Hi {{ user_name }}</a></div>
+        <div><a href="{{ url_for('ml.algo') }}">Hi {{ user_name }}</a></div>
         <nav>
             <ul>
-                <li><a href="{{ url_for('viewdata') }}">View Data</a></li>
-                <li class="active"><a href="{{ url_for('algo') }}">Algorithm</a></li>
-                <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
-                <li><a href="{{ url_for('prediction') }}">Prediction</a></li>
-                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('ml.viewdata') }}">View Data</a></li>
+                <li class="active"><a href="{{ url_for('ml.algo') }}">Algorithm</a></li>
+                <li><a href="{{ url_for('ml.analysis') }}">Analysis</a></li>
+                <li><a href="{{ url_for('ml.prediction') }}">Prediction</a></li>
+                <li><a href="{{ url_for('general.profile') }}">Profile</a></li>
             </ul>
         </nav>
     </header>
